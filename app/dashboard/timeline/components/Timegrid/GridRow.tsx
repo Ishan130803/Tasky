@@ -8,6 +8,7 @@ const GridRow = (props: {
   cell_width: string;
   atom_count: Number;
   atom_coloring: Array<string>;
+  labels: Array<string>;
 }) => {
   const arr = Array<Number>(Number(props.cardinality)).fill(0);
   return (
@@ -27,6 +28,7 @@ const GridRow = (props: {
             cell_width={props.cell_width}
             atom_coloring={props.atom_coloring}
             atom_count={props.atom_count}
+            labels={props.labels}
           />
         );
       })}

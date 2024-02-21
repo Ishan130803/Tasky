@@ -1,66 +1,33 @@
-import React from "react";
-import Timerule from "./components/Timerule";
-import Grid from "./components/Timegrid/Grid";
+"use client";
+import React, { useState } from "react";
+import Timerule from "./components/Timegrid/Timerule";
 
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
-export default function page() {
-  const atom_coloring = [
-    "bg-slate-400",
-    "bg-slate-400",
-    "bg-slate-400",
-    "bg-slate-400",
-    "bg-slate-400",
-    "bg-slate-400",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-    "bg-white",
-  ];
+import GridView from "./components/Timegrid/GridView";
 
-  const zoom_views = {
-    "hourly-sm": {
-      rows: 3,
-      columns: 2,
-      atom_count: 24,
-      cell_height: "60px",
-      cell_width: "50px",
-      atom_coloring: atom_coloring,
-    },
-  };
+export default function page() {
+  const [view, setView] = useState(0);
 
   return (
     <div className="flex flex-col ">
       <Slider
-        className="w-96"
-        aria-label="Temperature"
-        defaultValue={30}
+        value={view}
+        onChange={(event, num) => {
+          if (typeof num === "number") {
+            setView(num);
+          }
+        }}
+        className="w-80"
         valueLabelDisplay="auto"
-        shiftStep={30}
-        step={10}
+        step={1}
         marks
-        min={10}
-        max={110}
+        min={0}
+        max={11}
       />
-      <Timerule className="rounded-t-3xl" />
-      {Grid(zoom_views["hourly-sm"])}
-      {/* <Grid
-        rows={3}
-        columns={10}
-        atom_count={24}
-        cell_height="60px"
-        cell_width="50px"
-        atom_coloring={atom_coloring}
-      ></Grid> */}
+      {/* <Timerule className="rounded-t-3xl" /> */}
+      <GridView view={view}></GridView>
     </div>
   );
 }
