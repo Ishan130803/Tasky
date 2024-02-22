@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { Children } from "react";
 import GridCell from "./GridCell";
 
 const GridRow = (props: {
@@ -9,11 +9,12 @@ const GridRow = (props: {
   atom_count: Number;
   atom_coloring: Array<string>;
   labels: Array<string>;
+  children:React.ReactNode
 }) => {
   const arr = Array<Number>(Number(props.cardinality)).fill(0);
   return (
     <div
-      className="grid"
+      className="grid relative"
       style={{
         gridTemplateColumns: `repeat(${
           Number(props.cardinality) * Number(props.atom_count)
@@ -32,6 +33,7 @@ const GridRow = (props: {
           />
         );
       })}
+      {props.children}
     </div>
   );
 };

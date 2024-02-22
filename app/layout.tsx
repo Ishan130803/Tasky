@@ -19,7 +19,7 @@ export default function RootLayout({
       <body className={`h-screen w-screen flex flex-col ${inter.className}`}>
         <nav className="h-32 bg-blue-600"></nav>
         <main className="flex flex-grow relative">
-          <aside className="flex flex-col gap-4 p-4 relative bg-blue-200 w-24 h-full flex-grow-0 flex-shrink-0 hover:left-0 hover:scale-x-[300%] hovertransition-all duration-300 ease-in-out">
+          <aside className=" resize-x flex flex-col gap-4 p-4 relative bg-blue-200 w-48 h-full flex-grow-0 flex-shrink-0">
             <span>Item1</span>
             <span>Item2</span>
             <span>Item3</span>

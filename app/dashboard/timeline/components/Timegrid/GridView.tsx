@@ -1,8 +1,10 @@
 import React from "react";
 import Grid from "./Grid";
 import Timerule from "./Timerule";
+import { taskObj } from "@/app/types/taskClass";
+import TaskGrid from "../Container/TaskGrid";
 
-const GridView = (props: { view: number }) => {
+const GridView = (props: { view: number, taskList:taskObj[]}) => {
   const view_labels = [
     // "yearly",
     // "monthly",
@@ -247,7 +249,7 @@ const GridView = (props: { view: number }) => {
   return (
     <>
       {Timerule(zoom_views[view_labels[props.view]])}
-      {Grid(zoom_views[view_labels[props.view]])}
+      {TaskGrid({...zoom_views[view_labels[props.view]],taskList:props.taskList})}
     </>
   );
 };
