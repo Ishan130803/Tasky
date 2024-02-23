@@ -2,9 +2,11 @@
 import React, { Children } from "react";
 import GridCell from "./GridCell";
 import { zoomView } from "./GridView";
+import { taskObj } from "@/app/types/taskClass";
+import TaskContainer from "../Container/TaskContainer";
 
 const GridRow = (props: {
-  children:React.ReactNode
+  assignedTask : taskObj,
 }) => {
 
   const gridData = React.useContext(zoomView)
@@ -20,12 +22,12 @@ const GridRow = (props: {
         gridTemplateRows: `${gridData.atom_height}px`,
       }}
     >
+      <TaskContainer task={props.assignedTask} gridData={gridData} />
       {arr.map((value, index) => {
         return (
-          <GridCell />
+          <GridCell key = {index} />
         );
       })}
-      {props.children}
     </div>
   );
 };

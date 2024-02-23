@@ -12,19 +12,12 @@ const TaskGrid = (props: { taskList: taskObj[] }) => {
     <div className="flex flex-col">
       {props.taskList.map((value, index) => {
         if (value.subTasks.length == 0) {
-          return (
-            <GridRow key={`row-${index}`}>
-              {TaskContainer({ task: value, gridData:gridData })}
-            </GridRow>
-          );
+          return <GridRow key={`row-${index}`} assignedTask={value}></GridRow>;
         } else {
           return (
             <>
-              <GridRow key={`row-${index}`}>
-                {TaskContainer({ task: value, gridData:gridData })}
-              </GridRow>
-              {!value.collapsed &&
-                TaskGrid({taskList: value.subTasks })}
+              <GridRow key={`row-${index}`} assignedTask={value}></GridRow>
+              {!value.collapsed && TaskGrid({ taskList: value.subTasks })}
             </>
           );
         }

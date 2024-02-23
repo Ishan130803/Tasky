@@ -16,6 +16,7 @@ export default function Hourly() {
         let current_color = index % gridData.atom_coloring.length;
         return (
           <div
+            key={index}
             className={`text-center align-bottom border-b-black border-b-2 ${gridData.atom_coloring[current_color]}`}
           >
             {/* {props.labels &&

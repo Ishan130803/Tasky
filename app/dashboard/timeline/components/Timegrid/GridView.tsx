@@ -8,47 +8,70 @@ import dayjs, { Dayjs } from "dayjs";
 import duration from "dayjs/plugin/duration";
 dayjs.extend(duration);
 
-
 const zoom_views = {
-  daily:{
-    div_4 : {
+  daily: {
+    div_4: {
       atom_count: 4,
       atom_coloring: ["bg-slate-300", "bg-white", "bg-white", "bg-white"],
       atom_scale: dayjs.duration(15, "m"),
       cell_count: 24,
       atom_height: 60,
     },
-    div_6 : {
+    div_6: {
       atom_count: 6,
-      atom_coloring: ["bg-slate-300", "bg-white", "bg-white", "bg-white","bg-white"],
+      atom_coloring: [
+        "bg-slate-300",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+      ],
       atom_scale: dayjs.duration(10, "m"),
       cell_count: 24,
       atom_height: 60,
     },
-    div_12 : {
+    div_12: {
       atom_count: 12,
-      atom_coloring: ["bg-slate-300","bg-slate-300", "bg-white", "bg-white", "bg-white", "bg-white","bg-white","bg-white","bg-white","bg-white"],
+      atom_coloring: [
+        "bg-slate-300",
+        "bg-slate-300",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+        "bg-white",
+      ],
       atom_scale: dayjs.duration(5, "m"),
       cell_count: 24,
       atom_height: 60,
     },
-  }
-}
-const zoom_view_selector = (view:number) => {
+  },
+};
+const zoom_view_selector = (view: number) => {
   if (view <= 33) {
-    return new gridViewDataTypeClass({...zoom_views.daily.div_4,pixel_scale:view})
+    return new gridViewDataTypeClass({
+      ...zoom_views.daily.div_4,
+      pixel_scale: view,
+    });
+  } else if (view <= 66) {
+    return new gridViewDataTypeClass({
+      ...zoom_views.daily.div_6,
+      pixel_scale: view,
+    });
+  } else {
+    return new gridViewDataTypeClass({
+      ...zoom_views.daily.div_12,
+      pixel_scale: view,
+    });
   }
-  else if (view <= 66) {
-    return new gridViewDataTypeClass({...zoom_views.daily.div_6,pixel_scale:view})
-  }
-  else {
-    return new gridViewDataTypeClass({...zoom_views.daily.div_12,pixel_scale:view})
-  }
-}
+};
 
-
-export let zoomView = React.createContext<gridViewDataTypeClass>(zoom_view_selector(100));
-
+export let zoomView = React.createContext<gridViewDataTypeClass>(
+  zoom_view_selector(100)
+);
 
 const GridView = (props: { view: number; taskList: taskObj[] }) => {
   const view_labels = [
@@ -70,9 +93,6 @@ const GridView = (props: { view: number; taskList: taskObj[] }) => {
   ];
   const rows = 3;
 
-  
-
-  
   const a = {
     "daily-1x": new gridViewDataTypeClass({
       pixel_scale: 24,
@@ -294,14 +314,12 @@ const GridView = (props: { view: number; taskList: taskObj[] }) => {
       ],
     },
   };
-  
-  
 
   return (
     <>
-      <zoomView.Provider value = {zoom_view_selector(props.view)}>
-      {/* {Timerule(zoom_views[view_labels[props.view]])} */}
-      {TaskGrid({taskList: props.taskList})}
+      <zoomView.Provider value={zoom_view_selector(props.view)}>
+        {/* {Timerule(zoom_views[view_labels[props.view]])} */}
+        {TaskGrid({ taskList: props.taskList })}
       </zoomView.Provider>
     </>
   );

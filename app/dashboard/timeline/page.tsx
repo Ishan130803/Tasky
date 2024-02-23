@@ -21,7 +21,7 @@ const taskList:taskClass[] = [
   new taskClass({collapsed:false,completed:false,start_time:5,end_time:15,id:'1',subTasks:[],title:'Task4',duration:dayjs.duration(30,'m')}),
   new taskClass({collapsed:false,completed:false,start_time:6,end_time:10,id:'1',subTasks:[],title:'Task5',duration:dayjs.duration(30,'m')}),
   new taskClass({collapsed:false,completed:false,start_time:9,end_time:16,id:'1',subTasks:[],title:'Task6',duration:dayjs.duration(30,'m')}),
-  new taskClass({collapsed:true,completed:false,start_time:1,end_time:19,id:'1',subTasks:[
+  new taskClass({collapsed:false,completed:false,start_time:1,end_time:19,id:'1',subTasks:[
     new taskClass({collapsed:false,completed:false,start_time:6,end_time:10,id:'1',subTasks:[],title:'SubTask-7-1',duration:dayjs.duration(30,'m')}),
     new taskClass({collapsed:false,completed:false,start_time:6,end_time:10,id:'1',subTasks:[],title:'SubTask-7-2',duration:dayjs.duration(30,'m')}),
     new taskClass({collapsed:false,completed:false,start_time:6,end_time:10,id:'1',subTasks:[
