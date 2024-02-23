@@ -194,16 +194,17 @@ export default function TaskForm() {
             />
           </div> */}
 
-          {/* <Date_picker_with_FormLabel
+          <Date_picker_with_FormLabel
             label="Start Date And Time"
             theme={darkTheme}
             value={taskObj.task_start_time}
-            onChange={(date) => {
-              start_date_change_handle(date);
-            }}
+            onChange={ (ev) => {
+              
+            }
+            }
             key={"DatePicker1"}
             ref={refs.startDateSelector}
-          /> */}
+          />
 
           {/* <div className="flex flex-col justify-between gap-9">
             <Date_picker_with_FormLabel

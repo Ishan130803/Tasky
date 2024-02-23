@@ -1,4 +1,4 @@
-import React from "react";
+import Reactz from "react";
 import GridRow from "./GridRow";
 
 export default function Timerule(props: {
