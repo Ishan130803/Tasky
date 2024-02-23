@@ -5,11 +5,12 @@ import TaskContainer from "./TaskContainer";
 
 import { zoomView } from "../Timegrid/GridView";
 import { gridViewDataTypeClass } from "@/app/types/gridViewData";
+import { TimeCaret } from "../Timegrid/TimeCaret";
 
 const TaskGrid = (props: { taskList: taskObj[] }) => {
   const gridData = React.useContext(zoomView);
   return (
-    <div className="flex flex-col">
+    <>
       {props.taskList.map((value, index) => {
         if (value.subTasks.length == 0) {
           return <GridRow key={`row-${index}`} assignedTask={value}></GridRow>;
@@ -22,7 +23,7 @@ const TaskGrid = (props: { taskList: taskObj[] }) => {
           );
         }
       })}
-    </div>
+    </>
   );
 };
 

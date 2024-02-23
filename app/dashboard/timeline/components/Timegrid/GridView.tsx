@@ -6,14 +6,15 @@ import TaskGrid from "../Container/TaskGrid";
 import { gridViewDataTypeClass } from "@/app/types/gridViewData";
 import dayjs, { Dayjs } from "dayjs";
 import duration from "dayjs/plugin/duration";
+import { TimeCaret } from "./TimeCaret";
 dayjs.extend(duration);
 
 const zoom_views = {
   daily: {
-    div_4: {
-      atom_count: 4,
+    div_3: {
+      atom_count: 3,
       atom_coloring: ["bg-slate-300", "bg-white", "bg-white", "bg-white"],
-      atom_scale: dayjs.duration(15, "m"),
+      atom_scale: dayjs.duration(20, "m"),
       cell_count: 24,
       atom_height: 60,
     },
@@ -53,7 +54,7 @@ const zoom_views = {
 const zoom_view_selector = (view: number) => {
   if (view <= 33) {
     return new gridViewDataTypeClass({
-      ...zoom_views.daily.div_4,
+      ...zoom_views.daily.div_3,
       pixel_scale: view,
     });
   } else if (view <= 66) {
@@ -319,7 +320,10 @@ const GridView = (props: { view: number; taskList: taskObj[] }) => {
     <>
       <zoomView.Provider value={zoom_view_selector(props.view)}>
         {/* {Timerule(zoom_views[view_labels[props.view]])} */}
-        {TaskGrid({ taskList: props.taskList })}
+        <div className="flex flex-col relative overflow-hidden">
+          <TimeCaret />
+          {TaskGrid({ taskList: props.taskList })}
+        </div>
       </zoomView.Provider>
     </>
   );

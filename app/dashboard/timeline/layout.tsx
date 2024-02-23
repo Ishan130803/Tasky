@@ -1,5 +1,7 @@
 import React, { ReactNode } from 'react'
 
+
+
 export default function layout({children}:{children:ReactNode}) {
   return (
     <div className='bg-blue-200 h-full w-full border p-2'>

@@ -7,7 +7,7 @@ export default function Hourly() {
   const arr = Array<React.ReactNode>(gridData.atom_count).fill(0);
   return (
     <div
-      className={`grid grid-cols-subgrid grid-rows-subgrid divide-x divide-gray-800 border-black border-l-4 `}
+      className={`grid grid-cols-subgrid grid-rows-subgrid divide-x-[1px] divide-gray-400 divide-dotted border-black border-l-4 border-b`}
       style={{
         gridColumn: `span ${gridData.atom_count}`,
       }}
@@ -17,7 +17,7 @@ export default function Hourly() {
         return (
           <div
             key={index}
-            className={`text-center align-bottom border-b-black border-b-2 ${gridData.atom_coloring[current_color]}`}
+            className={`text-center align-bottom ${gridData.atom_coloring[current_color]}`}
           >
             {/* {props.labels &&
               (props.labels[index % props.labels.length] || null)} */}

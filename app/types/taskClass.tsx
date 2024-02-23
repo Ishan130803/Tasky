@@ -6,7 +6,7 @@ export interface taskObj {
   id: string;
   title:string;
   completed: boolean;
-  start_time: number | null;
+  start_time: Dayjs;
   end_time: number | null;
   collapsed: boolean;
   subTasks: Array<taskObj>;
@@ -17,7 +17,7 @@ export class taskClass implements taskObj {
   public id: string;
   public title:string
   public completed: boolean;
-  public start_time: number | null;
+  public start_time: Dayjs;
   public end_time: number | null;
   public subTasks: Array<taskObj>;
   public collapsed: boolean;

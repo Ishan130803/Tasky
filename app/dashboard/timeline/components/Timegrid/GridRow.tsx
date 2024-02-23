@@ -1,19 +1,23 @@
 "use client";
-import React, { Children } from "react";
+import React, { Children, useContext, useState } from "react";
 import GridCell from "./GridCell";
 import { zoomView } from "./GridView";
 import { taskObj } from "@/app/types/taskClass";
 import TaskContainer from "../Container/TaskContainer";
+import { gridStartingBoundContext } from "../../page";
 
 const GridRow = (props: {
   assignedTask : taskObj,
 }) => {
 
-  const gridData = React.useContext(zoomView)
+  const gridData = useContext(zoomView)
   const arr = Array<Number>(Number(gridData.cell_count)).fill(0);
 
+  
+  
+
   return (
-    <div
+     <div
       className="grid relative"
       style={{
         gridTemplateColumns: `repeat(${

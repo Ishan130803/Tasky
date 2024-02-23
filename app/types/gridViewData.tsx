@@ -39,7 +39,7 @@ export class gridViewDataTypeClass implements gridViewDataType {
     this.cell_count = params.cell_count;
     this.atom_count = params.atom_count;
     this.atom_coloring = params.atom_coloring;
-    this.atom_height = 80;
+    this.atom_height = 40;
   }
 
   get atom_width(): number {
