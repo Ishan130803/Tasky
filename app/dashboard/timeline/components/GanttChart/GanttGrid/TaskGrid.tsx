@@ -1,11 +1,11 @@
 import React from "react";
 import { taskObj } from "@/app/types/taskClass";
-import GridRow from "../Timegrid/GridRow";
+import GridRow from "./GridRow";
 import TaskContainer from "./TaskContainer";
 
-import { zoomView } from "../Timegrid/GridView";
+import { zoomView } from "./GanttGrid";
 import { gridViewDataTypeClass } from "@/app/types/gridViewData";
-import { TimeCaret } from "../Timegrid/TimeCaret";
+import { TimeCaret } from "../TimeCaret";
 
 const TaskGrid = (props: { taskList: taskObj[] }) => {
   const gridData = React.useContext(zoomView);

@@ -16,19 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`h-screen w-screen flex flex-col ${inter.className}`}>
-        <nav className="h-32 bg-blue-600"></nav>
-        <main className="flex flex-grow relative">
-          <aside className=" resize-x flex flex-col gap-4 p-4 relative bg-blue-200 w-48 h-full flex-grow-0 flex-shrink-0">
-            <span>Item1</span>
-            <span>Item2</span>
-            <span>Item3</span>
-            <span>Item4</span>
-            <span>Item5</span>
-          </aside>
-          <div className="relative flex-grow">{children}</div>
-        </main>
-      </body>
+      <body className={`${inter.className}`}>{children}</body>
     </html>
   );
 }

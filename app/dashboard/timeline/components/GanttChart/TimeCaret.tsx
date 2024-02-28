@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext } from "react";
-import { zoomView } from "./GridView";
+import { zoomView } from "./GanttGrid/GanttGrid";
 import { gridStartingBoundContext } from "../../page";
 
 import dayjs, { Dayjs } from "dayjs";

@@ -1,5 +1,5 @@
 import Reactz from "react";
-import GridRow from "./GridRow";
+import GridRow from "./GanttGrid/GridRow";
 
 export default function Timerule(props: {
   rows: number;
@@ -16,23 +16,12 @@ export default function Timerule(props: {
       {rows.map((value, index) => {
         return <GridRow
           key={`row-1`}
-          atom_count={1}
-          cardinality={props.columns}
-          atom_coloring={['bg-slate-200']}
-          cell_height={'2.5rem'}
-          cell_width={`calc(${props.cell_width} * ${props.atom_count})`}
-          labels={props.labels}
         ></GridRow>;
       })}
       {rows.map((value, index) => {
         return <GridRow
           key={`row-1`}
-          atom_count={props.atom_count}
-          cardinality={props.columns}
-          atom_coloring={['bg-slate-200']}
-          cell_height={'2.5rem'}
-          cell_width={props.cell_width}
-          labels={props.labels}
+          
         ></GridRow>;
       })}
     </div>

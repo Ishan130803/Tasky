@@ -1,5 +1,5 @@
 import React from "react";
-import { zoomView } from "./GridView";
+import { zoomView } from "./GanttGrid";
 
 
 export default function Hourly() {

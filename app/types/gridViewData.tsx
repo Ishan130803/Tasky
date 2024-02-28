@@ -12,8 +12,10 @@ interface gridViewDataType {
   atom_count: number;
   atom_coloring: Array<string>;
   atom_height: number;
+  gridStartingBound : dayjs.Dayjs;
 
   readonly atom_width: number;
+  readonly gridEndingBound : dayjs.Dayjs
 }
 
 export class gridViewDataTypeClass implements gridViewDataType {
@@ -24,6 +26,7 @@ export class gridViewDataTypeClass implements gridViewDataType {
   public atom_count: number;
   public atom_coloring: Array<string>;
   public atom_height: number;
+  public gridStartingBound: dayjs.Dayjs;
 
   constructor(params: {
     pixel_scale: number, // no of seconds per pixe,
@@ -32,6 +35,8 @@ export class gridViewDataTypeClass implements gridViewDataType {
     atom_count: number,
     atom_coloring: Array<string>,
     atom_height: number,
+    gridStartingBound: dayjs.Dayjs,
+
   }) {
     // this.pixel_scale = dayjs.duration(params.pixel_scale, "s");
     this.pixel_scale = params.pixel_scale;
@@ -39,12 +44,17 @@ export class gridViewDataTypeClass implements gridViewDataType {
     this.cell_count = params.cell_count;
     this.atom_count = params.atom_count;
     this.atom_coloring = params.atom_coloring;
-    this.atom_height = 40;
+    this.atom_height = 60;
+    this.gridStartingBound = params.gridStartingBound
   }
 
   get atom_width(): number {
     return (
       20 * this.pixel_scale / this.atom_count
     );
+  }
+
+  get gridEndingBound(): dayjs.Dayjs {
+    return this.gridStartingBound.add(this.atom_scale.asSeconds() * this.atom_count * this.cell_count,'s')
   }
 }

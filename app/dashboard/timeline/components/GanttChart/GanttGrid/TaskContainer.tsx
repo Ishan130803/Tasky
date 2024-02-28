@@ -1,20 +1,24 @@
 import React, { useContext } from "react";
 import { taskObj } from "@/app/types/taskClass";
-import { gridStartingBoundContext } from "../../page";
+import { gridStartingBoundContext } from "../../../page";
 import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
 dayjs.extend(dayjsDuration);
+import { zoomView } from "./GanttGrid";
 
-export default function TaskContainer(props: { task: taskObj; gridData: any }) {
+export default function TaskContainer(props: { task: taskObj}) {
   const gridStartingBound = useContext(gridStartingBoundContext);
+  const gridData = useContext(zoomView)
   const span_length =
-    props.task.duration.asSeconds() / props.gridData.atom_scale.asSeconds();
+    props.task.duration.asSeconds() / gridData.atom_scale.asSeconds();
 
   const span_offset =
-    dayjs.duration(props.task.start_time.diff(gridStartingBound)).asSeconds() /
-    props.gridData.atom_scale.asSeconds();
-  console.log(gridStartingBound);
+    dayjs.duration(props.task.start_time.diff(gridData.gridStartingBound)).asSeconds() /
+    gridData.atom_scale.asSeconds();
+
+  // console.log(props.task.start_time.diff(gridData.gridStartingBound))
   return (
+
     <div
       className={`box-border ${
         props.task.collapsed ? "bg-blue-400" : "bg-blue-100"
@@ -22,9 +26,9 @@ export default function TaskContainer(props: { task: taskObj; gridData: any }) {
       style={{
         display: "block",
         height: "90%",
-        width: `${Math.floor(span_length * props.gridData.atom_width)}px`,
+        width: `${Math.floor(span_length * gridData.atom_width)}px`,
         top: "5%",
-        left: `${Math.floor(span_offset * props.gridData.atom_width)}px`,
+        left: `${Math.floor(span_offset * gridData.atom_width)}px`,
         gridRow: `1/2`,
         // gridColumn: `${Math.floor(
         //   dayjs

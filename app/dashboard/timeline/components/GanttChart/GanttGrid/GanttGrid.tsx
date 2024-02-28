@@ -1,12 +1,10 @@
 import React from "react";
-import Grid from "./Grid";
-import Timerule from "./Timerule";
 import { taskObj } from "@/app/types/taskClass";
-import TaskGrid from "../Container/TaskGrid";
+import TaskGrid from "./TaskGrid";
 import { gridViewDataTypeClass } from "@/app/types/gridViewData";
 import dayjs, { Dayjs } from "dayjs";
 import duration from "dayjs/plugin/duration";
-import { TimeCaret } from "./TimeCaret";
+import { TimeCaret } from "../TimeCaret";
 dayjs.extend(duration);
 
 const zoom_views = {
@@ -51,30 +49,36 @@ const zoom_views = {
     },
   },
 };
-const zoom_view_selector = (view: number) => {
+const zoom_view_selector = (view: number, gridStartingBound: Dayjs) => {
+  const base_view = {pixel_scale: view, gridStartingBound: gridStartingBound}
   if (view <= 33) {
     return new gridViewDataTypeClass({
       ...zoom_views.daily.div_3,
-      pixel_scale: view,
+      ...base_view
     });
   } else if (view <= 66) {
     return new gridViewDataTypeClass({
       ...zoom_views.daily.div_6,
-      pixel_scale: view,
+      ...base_view
+
     });
   } else {
     return new gridViewDataTypeClass({
       ...zoom_views.daily.div_12,
-      pixel_scale: view,
+      ...base_view
+
     });
   }
 };
 
 export let zoomView = React.createContext<gridViewDataTypeClass>(
-  zoom_view_selector(100)
+  null
 );
 
-const GridView = (props: { view: number; taskList: taskObj[] }) => {
+
+
+
+const GridView = (props: { view: number; taskList: taskObj[]; gridStartingBound: Dayjs }) => {
   const view_labels = [
     // "yearly",
     // "monthly",
@@ -316,13 +320,15 @@ const GridView = (props: { view: number; taskList: taskObj[] }) => {
     },
   };
 
+  const gridData = zoom_view_selector(props.view, props.gridStartingBound)
+
   return (
     <>
-      <zoomView.Provider value={zoom_view_selector(props.view)}>
+      <zoomView.Provider value={gridData}>
         {/* {Timerule(zoom_views[view_labels[props.view]])} */}
         <div className="flex flex-col relative overflow-hidden">
           <TimeCaret />
-          {TaskGrid({ taskList: props.taskList })}
+          <TaskGrid taskList={props.taskList} />
         </div>
       </zoomView.Provider>
     </>

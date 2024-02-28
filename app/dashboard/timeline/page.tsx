@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, createContext } from "react";
-import Timerule from "./components/Timegrid/Timerule";
+import Timerule from "./components/GanttChart/TimeRuler";
 
 import Slider from "@mui/material/Slider";
 
-import GridView from "./components/Timegrid/GridView";
+import GridView from "./components/GanttChart/GanttGrid/GanttGrid";
 
 import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
@@ -22,7 +22,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: true,
     completed: true,
-    start_time: dayjs("2024-02-24 00:52"),
+    start_time: dayjs("2024-02-28 00:52"),
     end_time: 11,
     id: "1",
     subTasks: [],
@@ -32,7 +32,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 10,
     id: "1",
     subTasks: [],
@@ -42,7 +42,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 10,
     id: "1",
     subTasks: [],
@@ -52,7 +52,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 15,
     id: "1",
     subTasks: [],
@@ -62,7 +62,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 10,
     id: "1",
     subTasks: [],
@@ -72,7 +72,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 16,
     id: "1",
     subTasks: [],
@@ -82,14 +82,14 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 19,
     id: "1",
     subTasks: [
       new taskClass({
         collapsed: false,
         completed: false,
-        start_time: dayjs("2024-02-24 01:00"),
+        start_time: dayjs("2024-02-28 01:00"),
         end_time: 10,
         id: "1",
         subTasks: [],
@@ -99,7 +99,7 @@ const taskList: taskClass[] = [
       new taskClass({
         collapsed: false,
         completed: false,
-        start_time: dayjs("2024-02-24 01:00"),
+        start_time: dayjs("2024-02-28 01:00"),
         end_time: 10,
         id: "1",
         subTasks: [],
@@ -109,14 +109,14 @@ const taskList: taskClass[] = [
       new taskClass({
         collapsed: false,
         completed: false,
-        start_time: dayjs("2024-02-24 01:00"),
+        start_time: dayjs("2024-02-28 01:00"),
         end_time: 10,
         id: "1",
         subTasks: [
           new taskClass({
             collapsed: false,
             completed: false,
-            start_time: dayjs("2024-02-24 01:00"),
+            start_time: dayjs("2024-02-28 01:00"),
             end_time: 99,
             id: "1",
             subTasks: [],
@@ -126,7 +126,7 @@ const taskList: taskClass[] = [
           new taskClass({
             collapsed: false,
             completed: false,
-            start_time: dayjs("2024-02-24 01:00"),
+            start_time: dayjs("2024-02-28 01:00"),
             end_time: 10,
             id: "1",
             subTasks: [],
@@ -136,7 +136,7 @@ const taskList: taskClass[] = [
           new taskClass({
             collapsed: false,
             completed: false,
-            start_time: dayjs("2024-02-24 01:00"),
+            start_time: dayjs("2024-02-28 01:00"),
             end_time: 10,
             id: "1",
             subTasks: [],
@@ -154,7 +154,7 @@ const taskList: taskClass[] = [
   new taskClass({
     collapsed: false,
     completed: false,
-    start_time: dayjs("2024-02-24 01:00"),
+    start_time: dayjs("2024-02-28 01:00"),
     end_time: 10,
     id: "1",
     subTasks: [],
@@ -199,9 +199,7 @@ export default function page() {
         max={100}
       />
       {/* <Timerule className="rounded-t-3xl" /> */}
-      <gridStartingBoundContext.Provider value={gridStartingBound}>
-        {GridView({ view: view, taskList: taskList })}
-      </gridStartingBoundContext.Provider>
+      <GridView gridStartingBound={gridStartingBound} taskList={taskList} view={view}/>
     </div>
   );
 }

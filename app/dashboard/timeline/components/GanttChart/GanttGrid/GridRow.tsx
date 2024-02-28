@@ -1,10 +1,9 @@
 "use client";
 import React, { Children, useContext, useState } from "react";
 import GridCell from "./GridCell";
-import { zoomView } from "./GridView";
+import { zoomView } from "./GanttGrid";
 import { taskObj } from "@/app/types/taskClass";
-import TaskContainer from "../Container/TaskContainer";
-import { gridStartingBoundContext } from "../../page";
+import TaskContainer from "./TaskContainer";
 
 const GridRow = (props: {
   assignedTask : taskObj,
@@ -12,9 +11,6 @@ const GridRow = (props: {
 
   const gridData = useContext(zoomView)
   const arr = Array<Number>(Number(gridData.cell_count)).fill(0);
-
-  
-  
 
   return (
      <div
@@ -26,7 +22,7 @@ const GridRow = (props: {
         gridTemplateRows: `${gridData.atom_height}px`,
       }}
     >
-      <TaskContainer task={props.assignedTask} gridData={gridData} />
+      <TaskContainer task={props.assignedTask} />
       {arr.map((value, index) => {
         return (
           <GridCell key = {index} />
