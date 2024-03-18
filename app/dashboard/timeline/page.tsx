@@ -10,7 +10,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
 dayjs.extend(dayjsDuration);
 
-import { taskClass, user } from "@/app/types/taskClass";
+import { taskClass, user } from "@/types/taskClass";
 
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";

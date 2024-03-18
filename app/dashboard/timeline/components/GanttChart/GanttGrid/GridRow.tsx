@@ -1,15 +1,15 @@
 "use client";
 import React, { Children, useContext, useState } from "react";
 import GridCell from "./GridCell";
-import { zoomView } from "./GanttGrid";
-import { taskObj } from "@/app/types/taskClass";
+import { gridViewData } from "./contexts/gridViewData";
+import { taskObj } from "@/types/taskClass";
 import TaskContainer from "./TaskContainer";
 
 const GridRow = (props: {
   assignedTask : taskObj,
 }) => {
 
-  const gridData = useContext(zoomView)
+  const gridData = useContext(gridViewData)
   const arr = Array<Number>(Number(gridData.cell_count)).fill(0);
 
   return (

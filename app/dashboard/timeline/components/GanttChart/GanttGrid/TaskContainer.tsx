@@ -1,24 +1,31 @@
 import React, { useContext } from "react";
-import { taskObj } from "@/app/types/taskClass";
+import { taskObj } from "@/types/taskClass";
 import { gridStartingBoundContext } from "../../../page";
 import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
 dayjs.extend(dayjsDuration);
-import { zoomView } from "./GanttGrid";
+import { gridViewData } from "./contexts/gridViewData";
 
-export default function TaskContainer(props: { task: taskObj}) {
-  const gridStartingBound = useContext(gridStartingBoundContext);
-  const gridData = useContext(zoomView)
+export default function TaskContainer(props: { task: taskObj }) {
+  const gridData = useContext(gridViewData);
   const span_length =
-    props.task.duration.asSeconds() / gridData.atom_scale.asSeconds();
+    props.task.duration.asSeconds() *
+    gridData.pixel_scale *
+    gridData.scaling_factor;
 
-  const span_offset =
-    dayjs.duration(props.task.start_time.diff(gridData.gridStartingBound)).asSeconds() /
-    gridData.atom_scale.asSeconds();
+  const offset_from_left = () =>
+    Math.floor(
+      props.task.start_time.diff(gridData.gridStartingBound, "s") *
+        gridData.pixel_scale *
+        gridData.scaling_factor
+    );
+
+  const span_from_left = () => Math.floor(
+    props.task.duration.asSeconds() * gridData.pixel_scale * gridData.scaling_factor
+  )
 
   // console.log(props.task.start_time.diff(gridData.gridStartingBound))
   return (
-
     <div
       className={`box-border ${
         props.task.collapsed ? "bg-blue-400" : "bg-blue-100"
@@ -26,9 +33,9 @@ export default function TaskContainer(props: { task: taskObj}) {
       style={{
         display: "block",
         height: "90%",
-        width: `${Math.floor(span_length * gridData.atom_width)}px`,
+        width: `${span_from_left()}px`,
         top: "5%",
-        left: `${Math.floor(span_offset * gridData.atom_width)}px`,
+        left: `${offset_from_left()}px`,
         gridRow: `1/2`,
         // gridColumn: `${Math.floor(
         //   dayjs

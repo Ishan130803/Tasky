@@ -1,6 +1,6 @@
 import { rulerLabelProps,levelData } from "./rulerLabelProp";
 import { zoomView } from "../GanttGrid/GanttGrid";
-import { gridViewDataTypeClass } from "@/app/types/gridViewData";
+import { gridViewDataTypeClass } from "@/types/gridViewData";
 
 import React, { useContext } from 'react'
 

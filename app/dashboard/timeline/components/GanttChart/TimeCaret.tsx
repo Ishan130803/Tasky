@@ -1,20 +1,18 @@
 "use client";
 import React, { useContext } from "react";
-import { zoomView } from "./GanttGrid/GanttGrid";
-import { gridStartingBoundContext } from "../../page";
+import { gridViewData } from "./GanttGrid/contexts/gridViewData";
 
 import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
 dayjs.extend(dayjsDuration);
 
 export const TimeCaret = () => {
-  const gridData = React.useContext(zoomView);
-  const gridStartingBound = useContext(gridStartingBoundContext);
+  const gridData = React.useContext(gridViewData);
 
   const [currentTime, setCurrentTime] = React.useState<Dayjs>(dayjs());
 
   const isWithinBound = () => {
-    if (currentTime.isAfter(gridStartingBound)) {
+    if (currentTime.isAfter(gridData.gridStartingBound)) {
       return true;
     } else {
       return false;
@@ -31,17 +29,17 @@ export const TimeCaret = () => {
     };
   }, []);
 
+  const offset_from_left = () => Math.floor(
+    currentTime.diff(gridData.gridStartingBound,'s') * gridData.pixel_scale  * gridData.scaling_factor
+  )
+
   return (
     <>
       {isWithinBound() && (
         <div
           className="h-full border-dashed w-0 border-r-4 border-indigo-700 absolute z-20"
           style={{
-            left: `${Math.floor(
-              (dayjs.duration(currentTime.diff(gridStartingBound)).asSeconds() /
-                gridData.atom_scale.asSeconds()) *
-                gridData.atom_width
-            )}px`,
+            left: `${offset_from_left()}px`,
           }}
         ></div>
       )}

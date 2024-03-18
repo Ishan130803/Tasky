@@ -1,9 +1,9 @@
-import React from "react";
-import { zoomView } from "./GanttGrid";
+import React,{useMemo} from "react";
+import { gridViewData } from "./contexts/gridViewData";
 
+export default function GridCell() {
+  const gridData = React.useContext(gridViewData)
 
-export default function Hourly() {
-  const gridData = React.useContext(zoomView)
   const arr = Array<React.ReactNode>(gridData.atom_count).fill(0);
   return (
     <div
