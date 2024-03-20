@@ -1,0 +1,45 @@
+[
+  {
+    "collapsed": false,
+    "completed": false,
+    "creation_time": "2024-18-19 01:00",
+    "depth": 0,
+    "title": "task1",
+    "description": "This is a task 1",
+    "id": "id1",
+    "parent_id": "root",
+    "duration": 9600,
+    "start_time": "2024-03-19 01:00",
+    "end_time": null,
+    "subTasks": []
+  },
+  {
+    "collapsed": false,
+    "completed": false,
+    "creation_time": "2024-18-19 01:00",
+    "depth": 0,
+    "title": "task2",
+    "description": "This is a task 1",
+    "id": "id1",
+    "parent_id": "root",
+    "duration":  9600,
+    "start_time": "2024-03-19 01:00",
+    "end_time": null,
+    "subTasks": [
+      {
+        "collapsed": false,
+        "completed": true,
+        "creation_time": "2024-18-19 01:00",
+        "depth": 0,
+        "title": "task2 - subtask 1",
+        "description": "This is a task 1",
+        "id": "id1",
+        "parent_id": "root",
+        "duration":  7200,
+        "start_time": "2024-03-19 01:00",
+        "end_time": null,
+        "subTasks": []
+      }
+    ]
+  }
+]

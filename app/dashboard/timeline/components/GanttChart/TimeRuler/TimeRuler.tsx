@@ -1,35 +1,16 @@
-import { rulerLabelProps,levelData } from "./rulerLabelProp";
-import { zoomView } from "../GanttGrid/GanttGrid";
-import { gridViewDataTypeClass } from "@/types/gridViewData";
+import { FC, useContext } from "react";
+import TimeRuleRow from "./TimeRuleRow";
+import { gridViewData } from "../contexts/gridViewData";
+interface ITimeRulerProps {}
 
-import React, { useContext } from 'react'
-
-import dayjs, { Dayjs } from "dayjs";
-import duration from "dayjs/plugin/duration";
-dayjs.extend(duration);
-
-const TimeRuler = () => {
-  const gridData = React.useContext(zoomView)
+export const TimeRuler: FC<ITimeRulerProps> = (props) => {
+  const gridData = useContext(gridViewData);
   return (
     <>
-      <div className="flex flex-col">
-
-      </div>
+      <gridViewData.Provider value = {{...gridData,atom_coloring:['bg-blue-50'],atom_height:30}}>
+        <TimeRuleRow className="rounded-t-3xl"></TimeRuleRow>
+        <TimeRuleRow></TimeRuleRow>
+      </gridViewData.Provider>
     </>
-  )
-}
-export default TimeRuler
-
-
-const TimeRulerRow = (props:{gridData: gridViewDataTypeClass, levelData:levelData, level: number }) => {
-  const totalDuration = props.gridData.atom_scale.asSeconds()
-  if (props.level == 1) {
-    
-  }
-  return (
-    <>
-    </>
-  )
-}
-
-
+  );
+};

@@ -9,18 +9,21 @@ import {
 import { gridViewData } from "./contexts/gridViewData";
 import dayjs, { Dayjs } from "dayjs";
 import duration from "dayjs/plugin/duration";
-import { TimeCaret } from "../TimeCaret";
+import { TimeCaret } from "./TimeCaret";
+import { TimeRuler } from "./TimeRuler/TimeRuler";
 dayjs.extend(duration);
 
 const zoom_views: Array<zoomViewsMetaData> = [
   {
-    grid_span: dayjs.duration(1, "D"),
+    grid_span: dayjs.duration(1, "day"),
+    view_name:'daily',
     cell_count: 24,
     atom_count: 3,
     atom_coloring: ["bg-slate-300", "bg-white", "bg-white", "bg-white"],
   },
   {
-    grid_span: dayjs.duration(1, "D"),
+    grid_span: dayjs.duration(1, "day"),
+    view_name:'daily',
     cell_count: 24,
     atom_count: 6,
     atom_coloring: [
@@ -32,7 +35,8 @@ const zoom_views: Array<zoomViewsMetaData> = [
     ],
   },
   {
-    grid_span: dayjs.duration(1, "D"),
+    grid_span: dayjs.duration(1, "day"),
+    view_name:'daily',
     cell_count: 24,
     atom_count: 12,
     atom_coloring: [
@@ -60,13 +64,13 @@ const get_atom_width = (viewData : zoomViewsMetaData, pixel_scale : number, scal
 
 const get_grid_division_params = (viewSliderValue:number) => {
   if (viewSliderValue < 33) {
-    return zoom_views[2];
+    return zoom_views[0];
   }
   else if (viewSliderValue < 66) {
     return zoom_views[1];
   }
   else {
-    return zoom_views[0];
+    return zoom_views[2];
   }
 }
 
@@ -88,19 +92,20 @@ const zoom_view_selector = (
   return viewData
 };
 
-const GridView = (props: {
+const GanttChart = (props: {
   view: number;
   taskList: taskObj[];
   gridStartingBound: Dayjs;
 }) => {
-  const gridData = zoom_view_selector(props.view, props.gridStartingBound, 1, 60);
+  const gridData = zoom_view_selector(props.view, props.gridStartingBound, 0.005, 60);
 
   return (
     <>
       <gridViewData.Provider value={gridData}>
         {/* {Timerule(zoom_views[view_labels[props.view]])} */}
-        <div className="flex flex-col relative overflow-hidden">
+        <div className="flex flex-col relative">
           <TimeCaret />
+          <TimeRuler />
           <TaskGrid taskList={props.taskList} />
         </div>
       </gridViewData.Provider>
@@ -108,4 +113,4 @@ const GridView = (props: {
   );
 };
 
-export default GridView;
+export default GanttChart;

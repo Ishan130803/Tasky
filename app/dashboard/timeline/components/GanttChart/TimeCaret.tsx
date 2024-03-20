@@ -1,6 +1,6 @@
 "use client";
 import React, { useContext } from "react";
-import { gridViewData } from "./GanttGrid/contexts/gridViewData";
+import { gridViewData } from "./contexts/gridViewData";
 
 import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
@@ -37,7 +37,7 @@ export const TimeCaret = () => {
     <>
       {isWithinBound() && (
         <div
-          className="h-full border-dashed w-0 border-r-4 border-indigo-700 absolute z-20"
+          className="h-full border-dashed w-0 border-r-2 border-indigo-700 absolute z-20"
           style={{
             left: `${offset_from_left()}px`,
           }}

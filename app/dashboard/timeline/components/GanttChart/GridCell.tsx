@@ -7,7 +7,7 @@ export default function GridCell() {
   const arr = Array<React.ReactNode>(gridData.atom_count).fill(0);
   return (
     <div
-      className={`grid grid-cols-subgrid grid-rows-subgrid divide-x-[1px] divide-gray-400 divide-dotted border-black border-l-4 border-b`}
+      className={`grid grid-cols-subgrid grid-rows-subgrid divide-x-[1px] divide-gray-400 divide-dotted border-black border-l-[1.5px] border-b`}
       style={{
         gridColumn: `span ${gridData.atom_count}`,
       }}

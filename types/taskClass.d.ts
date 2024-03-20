@@ -7,13 +7,29 @@ export interface taskObj {
   id: string;
   title:string;
   completed: boolean;
-  start_time: Dayjs | null;
-  end_time: Dayjs | null;
-  collapsed: boolean;
-  subTasks: Array<taskObj>;
+  
   duration: dayjsDuration.Duration;
-  parentTask : taskObj | null;
 }
+
+interface taskObj {
+  id : string;
+  parent_id : string;
+  depth : number;
+  creation_time: string;
+
+  title : string;
+  description : string;
+  completed : boolean;
+
+  collapsed: boolean;
+
+  start_time: string | null;
+  end_time: string | null;
+  duration: number;
+  subTasks: Array<taskObj>;
+}
+
+interface taskState
 
 
 

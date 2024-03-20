@@ -6,7 +6,8 @@ const MAX_ATOM_SIZE = 200
 const MIN_ATOM_SIZE = 15
 
 export interface zoomViewsMetaData {
-  grid_span: duration.Duration
+  grid_span: duration.Duration;
+  view_name : 'daily' | 'weekly' | 'monthly' | 'yearly';
   cell_count: number;
   atom_count: number;
   atom_coloring: Array<string>;

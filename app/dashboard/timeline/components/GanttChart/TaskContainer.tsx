@@ -1,27 +1,28 @@
 import React, { useContext } from "react";
-import { taskObj } from "@/types/taskClass";
-import { gridStartingBoundContext } from "../../../page";
 import dayjs, { Dayjs } from "dayjs";
 import { default as dayjsDuration } from "dayjs/plugin/duration";
 dayjs.extend(dayjsDuration);
 import { gridViewData } from "./contexts/gridViewData";
+import { taskObj } from "@/types/taskClass";
 
 export default function TaskContainer(props: { task: taskObj }) {
   const gridData = useContext(gridViewData);
+  const start_time = dayjs(props.task.start_time)
+  const end_time = dayjs(props.task.end_time)
   const span_length =
-    props.task.duration.asSeconds() *
+    props.task.duration *
     gridData.pixel_scale *
     gridData.scaling_factor;
 
   const offset_from_left = () =>
     Math.floor(
-      props.task.start_time.diff(gridData.gridStartingBound, "s") *
+      start_time.diff(gridData.gridStartingBound, "s") *
         gridData.pixel_scale *
         gridData.scaling_factor
     );
 
   const span_from_left = () => Math.floor(
-    props.task.duration.asSeconds() * gridData.pixel_scale * gridData.scaling_factor
+    props.task.duration * gridData.pixel_scale * gridData.scaling_factor
   )
 
   // console.log(props.task.start_time.diff(gridData.gridStartingBound))
@@ -29,7 +30,7 @@ export default function TaskContainer(props: { task: taskObj }) {
     <div
       className={`box-border ${
         props.task.collapsed ? "bg-blue-400" : "bg-blue-100"
-      } border-2 border-blue-900 w-full p-2 shadow-lg absolute z-10 rounded-2xl hover:bg-blue-300 overflow-clip`}
+      } border border-blue-600 w-full p-2 shadow-lg absolute z-10 rounded-lg hover:bg-blue-300 overflow-clip`}
       style={{
         display: "block",
         height: "90%",

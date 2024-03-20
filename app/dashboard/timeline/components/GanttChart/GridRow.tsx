@@ -6,7 +6,7 @@ import { taskObj } from "@/types/taskClass";
 import TaskContainer from "./TaskContainer";
 
 const GridRow = (props: {
-  assignedTask : taskObj,
+  assignedTask? : taskObj,
 }) => {
 
   const gridData = useContext(gridViewData)
