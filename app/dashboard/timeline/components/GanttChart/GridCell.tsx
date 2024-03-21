@@ -1,5 +1,6 @@
 import React,{useMemo} from "react";
 import { gridViewData } from "./contexts/gridViewData";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function GridCell() {
   const gridData = React.useContext(gridViewData)
@@ -16,7 +17,7 @@ export default function GridCell() {
         let current_color = index % gridData.atom_coloring.length;
         return (
           <div
-            key={index}
+            key={uuidv4()}
             className={`text-center align-bottom ${gridData.atom_coloring[current_color]}`}
           >
             {/* {props.labels &&
