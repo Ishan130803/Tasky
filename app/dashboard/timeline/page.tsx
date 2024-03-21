@@ -12,6 +12,6 @@ const fetchData = async () => {
 
 export default async function page() {
   const taskTree: taskObj[] = await fetchData().then(data => data);
-  console.log(taskTree)
+  // console.log(taskTree)
   return <PageWrapper taskList={taskTree}></PageWrapper>;
 }

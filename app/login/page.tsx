@@ -19,7 +19,7 @@ const Page: FC<IPageProps> = (props) => {
   };
   return (
     <>
-      {loading ? null : <Loader2></Loader2>}
+      {loading ? <Loader2></Loader2> : null }
       <Button onClick={handleClick}>Sign In Using Google</Button>
     </>
   );
