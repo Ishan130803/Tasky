@@ -43,13 +43,13 @@ export const authOptions: NextAuthOptions = {
     signOut : "/login",
   },
   callbacks: {
-    async jwt({ token, account, profile, }) {
+    async jwt({ token, account, profile, user }) {
       console.log('account :' , account)
       console.log('profile :' , profile)
 
       if (account) {
-        token.accessToken = account.access_token
-        token.id = profile?.sub as string
+        token.accessToken = account?.access_token
+        token.providerId = profile?.sub as string
       }
       return token;
     },
@@ -57,10 +57,11 @@ export const authOptions: NextAuthOptions = {
       console.log("token", token);
 
       if (token) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.name = token.name;
-        session.user.image = token.picture;
+        session.user.providerId = token?.providerId;
+        session.user.id = token?.sub;
+        session.user.email = token?.email;
+        session.user.name = token?.name;
+        session.user.image = token?.picture;
       }
       console.log("session", session);
       return session;
