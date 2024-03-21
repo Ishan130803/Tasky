@@ -44,8 +44,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, account, profile, user }) {
-      console.log('account :' , account)
-      console.log('profile :' , profile)
 
       if (account) {
         token.accessToken = account?.access_token
@@ -54,7 +52,6 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      console.log("token", token);
 
       if (token) {
         session.user.providerId = token?.providerId;
@@ -63,7 +60,6 @@ export const authOptions: NextAuthOptions = {
         session.user.name = token?.name;
         session.user.image = token?.picture;
       }
-      console.log("session", session);
       return session;
     },
     redirect() {
