@@ -62,6 +62,30 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({account,user,profile}) {
+      console.log('account',account)
+      console.log('account',user)
+      console.log('account',profile)
+      if (account?.provider === 'google') {
+        try {
+          const res = await fetch('http://localhost:3000/api/createUser',{
+            method : "POST",
+            headers : {
+              "Content-Type":"application/json"
+            },
+            body : JSON.stringify(user)
+          })
+          if (res.ok) {
+            return true;
+          } else {
+            return false;
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      return true
+    },
     redirect() {
       return "/dashboard/timeline";
     },

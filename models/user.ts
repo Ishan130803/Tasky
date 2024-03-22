@@ -1,4 +1,5 @@
 import mongoose, {Schema, models} from 'mongoose'
+import { taskObj } from '@/types/taskClass'
 
 const userSchema = new Schema (
   {
@@ -11,6 +12,10 @@ const userSchema = new Schema (
       required : true,
     },
     id : {
+      type : String,
+      required : true,
+    },
+    providerId : {
       type : String,
       required : true,
     }
