@@ -17,6 +17,7 @@ import { signOut } from "next-auth/react";
 import { Button } from "@mui/material";
 
 
+
 interface IPageWrapperProps {
   taskList: taskObj[];
 }
@@ -25,15 +26,15 @@ export const PageWrapper: FC<IPageWrapperProps> = ({
   taskList = [],
   ...props
 }) => {
-  const session = useSession()
-  console.log(session)
+  const session = useSession();
+  console.log(session);
   const [view, setView] = useState(1);
   const [gridStartingBound, setGridStartingBound] = useState<Dayjs>(
     dayjs().startOf("d")
   );
   return (
     <>
-      <Button onClick={()=>signOut()}> Sign Out </Button>
+      <Button onClick={() => signOut()}> Sign Out </Button>
       <div className="flex flex-col ">
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <StaticDatePicker

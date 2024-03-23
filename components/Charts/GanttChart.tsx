@@ -121,7 +121,6 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
         labelSettings={labelSettings}
         resourceFields={resourceFields}
         resources={projectResources}
-        loadingIndicator={{indicatorType:'Shimmer'}}
         height="400px"
       >
         <Inject services={[Edit, Filter, Sort]} />

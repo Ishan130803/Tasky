@@ -1,25 +1,21 @@
-import mongoose, {Schema, models} from 'mongoose'
-import { taskObj } from '@/types/taskClass'
+import mongoose from 'mongoose';
 
-const userSchema = new Schema (
-  {
-    email : {
-      type : String,
-      required : true,
-    },
-    name : {
-      type : String,
-      required : true,
-    },
-    id : {
-      type : String,
-      required : true,
-    },
-    providerId : {
-      type : String,
-      required : true,
-    }
-  }
-)
+const TaskSchema = new mongoose.Schema({
+  task_id: String,
+  task_name: String,
+  start_time: Date,
+  end_time: Date,
+  parent_id: String,
+  progress: Number,
+  description: String,
+  completed: Boolean,
+});
 
-const User = models.User || mongoose.model('User', userSchema)
+// Define a mongoose schema for your user data
+const UserSchema = new mongoose.Schema({
+  userid: String,
+  tasks: [TaskSchema], // Embedding tasks schema as an array
+});
+
+// Define a mongoose model based on the schema
+export const UserModel = mongoose.models.User || mongoose.model('User', UserSchema);

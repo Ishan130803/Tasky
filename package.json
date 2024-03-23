@@ -19,6 +19,7 @@
     "@mui/material": "^5.15.10",
     "@mui/styled-engine-sc": "^6.0.0-alpha.16",
     "@mui/x-date-pickers": "^6.19.4",
+    "@syncfusion/ej2-react-gantt": "^25.1.35",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "dayjs": "^1.11.10",
