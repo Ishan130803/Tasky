@@ -1,130 +1,89 @@
+
+
 "use client";
+import { FC, useMemo } from "react";
 import {
   GanttComponent,
-  Inject,
+  TaskFieldsModel,
   Edit,
-  Filter,
-  Sort,
+  Selection,
+  Toolbar,
+  Inject,
 } from "@syncfusion/ej2-react-gantt";
+import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
+import { useSession } from "next-auth/react";
 
-import { FC } from "react";
-
-
-const projectResources: object[] = [
-  { resourceId: 1, resourceName: "Project Manager" },
-  { resourceId: 2, resourceName: "Software Analyst" },
-  { resourceId: 3, resourceName: "Developer" },
-  { resourceId: 4, resourceName: "Testing Engineer" },
-];
-
-const data: object[] = [
+const GanttData: object[] = [
   {
-    TaskID: 1,
-    TaskName: "Project Initiation",
-    StartDate: new Date("04/02/2019"),
-    EndDate: new Date("04/21/2019"),
-    subtasks: [
-      {
-        TaskID: 2,
-        TaskName: "Identify Site location",
-        StartDate: new Date("04/02/2019"),
-        Duration: 4,
-        Progress: 50,
-        resources: [2, 3],
-      },
-      {
-        TaskID: 3,
-        TaskName: "Perform Soil test",
-        StartDate: new Date("04/02/2019"),
-        Duration: 4,
-        Progress: 50,
-        resources: [2],
-      },
-      {
-        TaskID: 4,
-        TaskName: "Soil test approval",
-        StartDate: new Date("04/02/2019"),
-        Duration: 4,
-        Predecessor: "3FS",
-        Progress: 50,
-        resources: [1],
-      },
-    ],
+    task_id: "task2",
+    task_name: "Task 2",
+    start_time: "2024-03-23T17:49:40.681Z",
+    end_time: "2024-03-29T02:30:00.681Z",
+    Progress: 75,
+    description: "Description for Task 3",
+    completed: false,
   },
   {
-    TaskID: 5,
-    TaskName: "Project Estimation",
-    StartDate: new Date("04/02/2019"),
-    EndDate: new Date("04/21/2019"),
-    subtasks: [
-      {
-        TaskID: 6,
-        TaskName: "Develop floor plan for estimation",
-        StartDate: new Date("04/04/2019"),
-        Duration: 3,
-        Progress: 50,
-      },
-      {
-        TaskID: 7,
-        TaskName: "List materials",
-        StartDate: new Date("04/04/2019"),
-        Duration: 3,
-        Progress: 50,
-        resources: [1, 3, 5],
-      },
-      {
-        TaskID: 8,
-        TaskName: "Estimation approval",
-        StartDate: new Date("04/04/2019"),
-        Duration: 3,
-        Predecessor: "7SS",
-        Progress: 50,
-      },
-    ],
+    task_id: "task1",
+    task_name: "Task 1",
+    start_time: "2024-03-23T17:49:40.681Z",
+    end_time: "2024-03-29T02:30:00.681Z",
+    parent_id: "task2",
+    Progress: 25,
+    description: "Description for Task 3",
+    completed: false,
   },
 ];
 
-interface IGanttChartProps {}
+const userid = "65fd93e9013acedd6f51891a";
 
+interface IGanttChartProps {
+  session : Object
+}
 export const GanttChart: FC<IGanttChartProps> = (props) => {
-  const taskFields: any = {
-    id: "TaskID",
-    name: "TaskName",
-    startDate: "StartDate",
-    duration: "Duration",
+  const taskFields: TaskFieldsModel = {
+    id: "task_id",
+    name: "task_name",
+    startDate: "start_time",
+    endDate: "end_time",
+    duration: "duration",
     progress: "Progress",
-    child: "subtasks",
-    dependency: "Predecessor",
-    resourceInfo: "resources",
+    parentID: "parent_id",
   };
-  const labelSettings: any = {
-    rightLabel: "resources",
-  };
-  const editSettings: any = {
-    allowEditing: true,
-    editMode: "Auto",
+
+  const session = useSession()
+  console.log("Session : ",session)
+  // const userid = session.data?.user?.id;
+  const datasource = useMemo<DataManager>(
+    () =>
+      new DataManager({
+        url: `http://localhost:3000/api/users/GetData/${userid}`,
+        updateUrl: `http://localhost:3000/api/users/GetData/${userid}`,
+        removeUrl: `http://localhost:3000/api/users/DeleteData/${userid}`,
+        insertUrl: `http://localhost:3000/api/users/GetData/${userid}`,
+        adaptor: new WebApiAdaptor(),
+        crossDomain: true,
+      }),
+    [userid]
+  );
+
+  const editOptions = {
+    allowAdding: true,
+    allowDeleting: true,
     allowTaskbarEditing: true,
   };
-  const resourceFields: any = {
-    id: "resourceId",
-    name: "resourceName",
-  };
+
+  const toolbarOptions = ["Add", "Delete"];
   return (
-    <>
-      <h2>Syncfusion React Gantt Component</h2>
-      <GanttComponent
-        dataSource={data}
-        allowFiltering={true}
-        allowSorting={true}
-        taskFields={taskFields}
-        editSettings={editSettings}
-        labelSettings={labelSettings}
-        resourceFields={resourceFields}
-        resources={projectResources}
-        height="400px"
-      >
-        <Inject services={[Edit, Filter, Sort]} />
-      </GanttComponent>
-    </>
+    <GanttComponent
+      dataSource={datasource}
+      editSettings={editOptions}
+      toolbar={toolbarOptions}
+      height="450px"
+      taskFields={taskFields}
+      allowSelection={true}
+    >
+      <Inject services={[Edit, Selection, Toolbar]} />
+    </GanttComponent>
   );
 };

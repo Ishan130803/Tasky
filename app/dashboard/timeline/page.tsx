@@ -1,7 +1,6 @@
 import { taskObj } from "@/types/taskClass";
 import { PageWrapper } from "./PageWrapper";
 
-import fs from "fs/promises";
 import clientPromise from "@/lib/mongodb";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
