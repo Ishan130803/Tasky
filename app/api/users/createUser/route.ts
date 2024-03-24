@@ -1,24 +1,34 @@
 import clientPromise from "@/lib/mongodb";
-import { getServerSession } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  const { id } = await request.json();
-  console.log(id)
-  const client = await clientPromise;
-  const database = client.db("Tasky");
-  const isDbUser = await database.collection("users").findOne({[id] : {$exists : true}})
-  if (isDbUser) {
-    console.log("user already Registered")
-    return NextResponse.json({message : "User already Registered"},{status : 200})
+  const data = await request.json()
+  console.log('route',data);
+  const userid = data.userid
+  if (!userid) {
+    return new Response("Invalid User Id Received while creating User", {
+      status: 422,
+    });
   }
-  await database.collection('users').insertOne({
-    [id] : {
-      tasks : [],
-      groups : [],
-      owns : [],
-      partOf : [],
+  try {
+    const client = await clientPromise;
+    const db = client.db("Tasky");
+    const userCollection = db.collection("users");
+    const isDbUser = await userCollection.findOne({userid : userid})
+
+    if (isDbUser) {
+      return new Response("User Already Exists warning",{status : 200})
     }
-  })
-  return NextResponse.json({message : "User Registered"},{status : 201})
+
+    await userCollection.insertOne({
+      userid: userid,
+      tasks: [],
+    });
+  } catch (error) {
+    return new Response("Unable to fetch the data from database",{status : 500} )
+  }
+  return Response.json({ message: "User Registered" }, { status: 201 });
+}
+
+export async function GET(req : Request) {
+  return new Response("Forbidden",{status : 403})
 }

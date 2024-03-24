@@ -1,7 +1,5 @@
-
-
 "use client";
-import { FC, useMemo } from "react";
+import { FC, useMemo, useEffect,useState } from "react";
 import {
   GanttComponent,
   TaskFieldsModel,
@@ -9,6 +7,11 @@ import {
   Selection,
   Toolbar,
   Inject,
+  EditSettingsModel,
+  ContextMenu,
+  RowDD,
+  SelectionSettingsModel,
+  LabelSettingsModel,
 } from "@syncfusion/ej2-react-gantt";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSession } from "next-auth/react";
@@ -35,12 +38,14 @@ const GanttData: object[] = [
   },
 ];
 
-const userid = "65fd93e9013acedd6f51891a";
+// let userid = "65fd93e9013acedd6f51891a";
 
-interface IGanttChartProps {
-  session : Object
-}
+interface IGanttChartProps {}
 export const GanttChart: FC<IGanttChartProps> = (props) => {
+  let session = useSession();
+  const userid = session.data?.user?.id;
+  console.log(userid);
+
   const taskFields: TaskFieldsModel = {
     id: "task_id",
     name: "task_name",
@@ -49,11 +54,10 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     duration: "duration",
     progress: "Progress",
     parentID: "parent_id",
+    dependency: "Predecessor",
+    expandState: "isExpanded",
   };
 
-  const session = useSession()
-  console.log("Session : ",session)
-  // const userid = session.data?.user?.id;
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
@@ -67,23 +71,40 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     [userid]
   );
 
-  const editOptions = {
+  const editOptions: EditSettingsModel = {
     allowAdding: true,
+    allowEditing: true,
     allowDeleting: true,
     allowTaskbarEditing: true,
   };
+  const selectionSettings: SelectionSettingsModel = {
+    type: "Multiple",
+  };
 
-  const toolbarOptions = ["Add", "Delete"];
+  const labelSettings: LabelSettingsModel = {
+    rightLabel: "Task Name: ${taskData.task_name}",
+    taskLabel: "${Progress}%",
+  };
+  const toolbarOptions = ["Add", "Delete", "Indent", "Outdent"];
   return (
-    <GanttComponent
-      dataSource={datasource}
-      editSettings={editOptions}
-      toolbar={toolbarOptions}
-      height="450px"
-      taskFields={taskFields}
-      allowSelection={true}
-    >
-      <Inject services={[Edit, Selection, Toolbar]} />
-    </GanttComponent>
+    userid && (
+      <GanttComponent
+        dataSource={datasource}
+        editSettings={editOptions}
+        toolbar={toolbarOptions}
+        height="450px"
+        taskFields={taskFields}
+        allowSelection={true}
+        allowSorting={true}
+        allowResizing={true}
+        enableContextMenu={true}
+        allowRowDragAndDrop={true}
+        selectionSettings={selectionSettings}
+        allowTaskbarDragAndDrop={true}
+        labelSettings={labelSettings}
+      >
+        <Inject services={[RowDD, Edit, Selection, Toolbar, ContextMenu]} />
+      </GanttComponent>
+    )
   );
 };

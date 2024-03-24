@@ -3,16 +3,26 @@ import { UserModel } from "@/models/user";
 import { AreaChart } from "lucide-react";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
+
+export const dynamic = 'force-dynamic'
 
 type Params = {
   userid: string;
 };
+async function getUserId() {
+  const session = await getServerSession();
+  const userid = session?.user.id
+  return userid
+}
+
 
 export async function GET(
   req: Request,
   context: { params: { userid: Array<string> } }
 ) {
   const userid = context.params.userid[0];
+
   try {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
@@ -51,9 +61,6 @@ export async function PUT(
 
     for (const item of data) {
       const { task_id, ...updatedData } = item; // Extract userid and TaskID from item
-      console.log(item);
-      console.log(task_id);
-      console.log(updatedData);
       await userCollection.findOneAndUpdate(
         { userid, "tasks.task_id": task_id }, // Find user with matching userid and task_id
         { $set: { "tasks.$": item } } // Update the matching task
