@@ -1,4 +1,4 @@
-import { FC } from "react";
+import {FC} from 'react';
 import { taskObj } from "@/types/taskClass";
 import { TaskInputLayout } from "./TaskInput";
 interface ITaskFormProps extends taskObj {

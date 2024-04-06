@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { FC } from "react";
 import { useState, useEffect, useRef } from "react";
 
