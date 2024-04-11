@@ -129,9 +129,7 @@ function Appbar() {
             ))}
           </Box>
 					
-						<Button variant='contained' onClick={()=>{
-
-						}}
+						<Button variant='contained' className='bg-[#1976d2]'
               sx={{
                 display:{xs:'none',md:'block'}
               }}

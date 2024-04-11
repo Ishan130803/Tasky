@@ -92,8 +92,7 @@ const SideNav: React.FC<SideNavProps> = ({ projects,openForm }) => {
   }
   return (
     <>
-      <CssBaseline />
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" className="z-10" open={open}>
         <DrawerHeader>
           <div>
             <button onClick={handleClick}>
@@ -126,7 +125,7 @@ const SideNav: React.FC<SideNavProps> = ({ projects,openForm }) => {
         <Divider />
 
         <ul >
-          <li key={'project'}  className="px-4 py-3 opacity-9  cursor-pointer hover:bg-gray-100 flex gap-5">
+          <li key={'project'}  className="px-4 py-3 opacity-9  cursor-pointer hover:bg-gray-100 flex gap-5" onClick={()=>{setOpen(true)}}>
             
             <FolderIcon ></FolderIcon>
             <div 
