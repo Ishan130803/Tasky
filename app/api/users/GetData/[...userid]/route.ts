@@ -4,7 +4,7 @@ import { AreaChart } from "lucide-react";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
-
+import { PushOperator } from "mongodb";
 export const dynamic = 'force-dynamic'
 
 type Params = {
@@ -89,10 +89,31 @@ export async function POST(
       return new Response("user Id must be present", { status: 404 });
     }
     const data = await req.json();
-    await userCollection.updateOne(
-      { userid: userid },
-      { $push: { tasks: { $each: data } } } // Add taskData to tasks array
-    );
+    const userPresent = await userCollection.findOne({userid:userid});
+    if(userPresent){
+
+      await userCollection.updateOne(
+        { userid: userid },
+        { $push: { tasks: { $each: data } } as unknown as PushOperator<Document>, } // Add taskData to tasks array
+      ).then(()=>{
+        new Response("Inserted Data Successfully", { status: 200 })
+      })
+      .catch((err)=>{
+        new Response("Couldn't insert the data ",err);
+      });
+    }
+    else{
+      await userCollection.insertOne(
+        {
+          userid:userid,
+          tasks:data,
+        }
+      ).then(()=>{
+        new Response("Inserted Data Successfully", { status: 200 })
+      }).catch((err)=>{
+        new Response("Couldn't insert the data ",err);
+      })
+    }
 
     return new Response("Inserted Data Successfully", { status: 200 });
   } catch (error) {
