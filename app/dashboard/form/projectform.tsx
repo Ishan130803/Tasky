@@ -12,7 +12,7 @@ export default function ProjectForm({
 }: {
   openForm: React.EventHandler<React.MouseEvent<HTMLElement>>;
 }) {
-  const { register, handleSubmit,setError,formState:{errors}} = useForm<IFormInput>({
+  const { register, handleSubmit,formState:{errors}} = useForm<IFormInput>({
     defaultValues:{
       name:'',
       
