@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { GanttChart } from "@/components/Charts/GanttChart";
 import { Button } from "@mui/material"
 import { signOut } from "next-auth/react";;

@@ -12,6 +12,7 @@ import {
   RowDD,
   SelectionSettingsModel,
   LabelSettingsModel,
+  Sort
 } from "@syncfusion/ej2-react-gantt";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSession } from "next-auth/react";
@@ -85,26 +86,34 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     rightLabel: "Task Name: ${taskData.task_name}",
     taskLabel: "${Progress}%",
   };
-  const toolbarOptions = ["Add", "Delete", "Indent", "Outdent"];
+
+  const splitterSettings:any={
+    position:"20%"
+  }
+
+  const toolbarOptions = ["Add", "Delete", "Indent", "Outdent","ExpandAll","CollapseAll"];
   return (
     userid && (
+      <div className="rounded-xl w-full ">
       <GanttComponent
         dataSource={datasource}
         editSettings={editOptions}
         toolbar={toolbarOptions}
-        height="450px"
+        height="600px"
         taskFields={taskFields}
         allowSelection={true}
-        allowSorting={true}
         allowResizing={true}
+        allowSorting={true}
         enableContextMenu={true}
         allowRowDragAndDrop={true}
         selectionSettings={selectionSettings}
         allowTaskbarDragAndDrop={true}
         labelSettings={labelSettings}
+        splitterSettings={splitterSettings}
       >
-        <Inject services={[RowDD, Edit, Selection, Toolbar, ContextMenu]} />
+        <Inject services={[RowDD, Edit, Selection, Toolbar, ContextMenu,Sort]} />
       </GanttComponent>
+      </div>
     )
   );
 };
