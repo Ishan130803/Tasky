@@ -1,6 +1,6 @@
 "use client";
+import Login from "@/components/ui/login/login";
 import { FC } from "react";
-import Login from "@/app/ui/login/login";
 interface IPageProps {}
 
 const Page: FC<IPageProps> = (props) => {
