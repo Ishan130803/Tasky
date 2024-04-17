@@ -1,7 +1,5 @@
 "use client";
 import { GanttChart } from "@/components/Charts/GanttChart";
-import { Button } from "@mui/material"
-import { signOut } from "next-auth/react";;
 
 
 export default async function page() {
@@ -9,8 +7,6 @@ export default async function page() {
   // console.log(taskTree)
   return (
     <>
-    <Button onClick={() => signOut()}> Sign Out </Button>
-
       <GanttChart />
     </>
   );
