@@ -1,9 +1,9 @@
 "use client";
-import React, { ReactNode } from 'react'
-import SideNav from '@/app/ui/dashboard/SideNav'
+import React, { ReactNode,useState } from 'react'
+import SideNav from '@/components/ui/dashboard/SideNav';
 import ProjectForm from '@/app/dashboard/form/projectform'
-export default function layout({children}:{children:ReactNode}) {
-  const [formOpen,setFormOpen] = React.useState(false);
+export default function Layout({children}:{children:ReactNode}) {
+  const [formOpen,setFormOpen] = useState(false);
   const handleForm = ()=>{
     if(formOpen){
       setFormOpen(false);
