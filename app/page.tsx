@@ -1,7 +1,8 @@
+import Appbar from "@/components/ui/landingpage/navbar";
 import Test from "./Test";
-import Hero from "@/app/ui/landingpage/hero";
-import Appbar from "@/app/ui/landingpage/navbar";
+
 import '@/app/globals.css'
+import Hero from "@/components/ui/landingpage/hero";
 export default function Home() {
   return (
     <>
