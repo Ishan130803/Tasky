@@ -59,7 +59,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     expandState: "isExpanded",
   };
 
-  const baseUrl = window?.location?.origin
+  const baseUrl = global.window?.location?.origin
   console.log(baseUrl)
 
   const datasource = useMemo<DataManager>(
@@ -71,7 +71,6 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
       }),
     [userid]
   );
-
   const editOptions: EditSettingsModel = {
     allowAdding: true,
     allowEditing: true,
