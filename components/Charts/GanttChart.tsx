@@ -59,10 +59,13 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     expandState: "isExpanded",
   };
 
+  const baseUrl = window?.location?.origin
+  console.log(baseUrl)
+
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `http://localhost:3000/api/users/GetData/${userid}/1338`,
+        url: `${baseUrl}/api/users/GetData/${userid}/1338`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),
