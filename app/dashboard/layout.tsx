@@ -29,27 +29,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             handleSelected={handleSelected}
           ></SideNav>
           <div className="w-[100%] h-full max-w-full  min-w-[70%]">
-            <div className="p-3 w-full flex justify-between content-center">
-              <div className="h-full p-2 ">
-                <div className="flex gap-2 content-end">
-                  <LucideFolders className="inline" />
-                  <span className="inline-block">{selected}</span>
-                </div>
-              </div>
-              <div className="flex gap-2">
-                <button className="p-1 flex gap-2 content-center bg-blue-400/85 rounded-md text-white font-semibold hover:bg-blue-400">
-                  <PlusCircle className="inline"/>
-                  <span className="block">New</span>
-                </button>
-                <button
-                  onClick={() => signOut()}
-                  className="p-1 bg-orange-400/85 rounded-md text-white font-semibold hover:bg-orange-400"
-                >
-                  Sign Out
-                </button>
-              </div>
-            </div>
-            <hr className="border-gray-300" />
+            
             <div className="w-full overflow-hidden">{children}</div>
           </div>
         </div>
