@@ -2,7 +2,7 @@ import clientPromise from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { Document, ObjectId } from "mongodb";
-import { count } from "console";
+import { v4 as uuid } from "uuid";
 
 export const dynamic = "force-dynamic";
 
@@ -92,7 +92,8 @@ export async function PUT(req: NextRequest, context: routeParams) {
 
 
     const bulkOps = updatedData.map(
-      ({ projectid, userId, task_id, ...restOfData }) => ({
+      //@ts-ignore
+      ({ projectid, userId, task_id, _id, ...restOfData }) => ({
         updateOne: {
           filter: { projectid: pid, userId: uid, task_id: task_id },
           update: { $set: restOfData },

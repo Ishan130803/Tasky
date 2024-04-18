@@ -3,6 +3,7 @@ import { useValueWithTimezone } from "@mui/x-date-pickers/internals/hooks/useVal
 import { validateHeaderValue } from "http";
 import { Document, ObjectId, PullOperator, PushOperator } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";
+import { v4 as uuidv4 } from "uuid";
 export const dynamic = "force-dynamic";
 
 interface routeParams {
@@ -58,7 +59,7 @@ export async function PUT(req: NextRequest, context: routeParams) {
 
     const updatedData:Array<Document> = await req.json();
 
-    const bulkOps = updatedData.map(({ projectid, userId, ...restOfData }) => ({
+    const bulkOps = updatedData.map(({ projectid, userId, _id, ...restOfData }) => ({
       updateOne: {
         filter: { projectid: projectid, userId: userid},
         update: { $set: restOfData },
@@ -96,7 +97,7 @@ export async function POST(req: NextRequest, context: routeParams) {
 
     const data: Array<Document> = await req.json();
 
-    const dataWithUserId = data.map((value) => ({ ...value, userId: userid }));
+    const dataWithUserId = data.map((value) => ({ ...value, projectid : uuidv4.toString(), userId: userid }));
 
     const res = await projectCollection.insertMany(dataWithUserId);
 
