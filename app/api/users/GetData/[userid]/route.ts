@@ -1,5 +1,8 @@
 import clientPromise from "@/lib/mongodb";
+import { useValueWithTimezone } from "@mui/x-date-pickers/internals/hooks/useValueWithTimezone";
+import { validateHeaderValue } from "http";
 import { Document, ObjectId, PullOperator, PushOperator } from "mongodb";
+import { NextRequest, NextResponse } from "next/server";
 export const dynamic = "force-dynamic";
 
 interface routeParams {
@@ -8,76 +11,66 @@ interface routeParams {
   };
 }
 
-export async function GET(req: Request, context: routeParams) {
+export async function GET(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
 
   try {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
 
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
     const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-    console.log(user?.projects, !user?.projects);
-    if (!user?.projects) {
-      console.log("Empty");
-      const newuser = await userCollection.findOneAndUpdate(
-        { userId: new ObjectId(userid) },
-        { $set: { projects: [] } },
-        { returnDocument: "after" }
-      );
-      return Response.json({ ...newuser });
-    }
-    return Response.json({ ...user });
+
+    const projects = await projectCollection.find({ userId: userid }).toArray();
+
+    console.log(projects);
+
+    return Response.json([...projects]);
   } catch (error) {
+    console.error(error);
     return new Response("Fatal Error occured while getting user projects", {
       status: 500,
     });
   }
 }
 
-export async function PUT(req: Request, context: routeParams) {
+export async function PUT(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
 
   try {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
 
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
     const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-    console.log(user?.projects, !user?.projects);
-    if (!user?.projects) {
-      console.log("Empty");
-      const newuser = await userCollection.findOneAndUpdate(
-        { userId: new ObjectId(userid) },
-        { $set: { projects: [] } },
-        { returnDocument: "after" }
-      );
-      return Response.json({ ...newuser });
-    }
 
-    const data = await req.json();
+    const updatedData:Array<Document> = await req.json();
 
-    for (const item of data) {
-      const { projectid } = item; // Extract userid and TaskID from item
-      await userCollection.findOneAndUpdate(
-        { userId: new ObjectId(userid) }, // Find user with matching userid and task_id
-        { $set: { "projects.$[project]": item } }, // Update the matching task
-        { arrayFilters: [{ "project.projectid": projectid }] }
-      );
-    }
-    return new Response("Updated User Projects", { status: 200 });
+    const bulkOps = updatedData.map(({ projectid, userId, ...restOfData }) => ({
+      updateOne: {
+        filter: { projectid: projectid, userId: userid},
+        update: { $set: restOfData },
+      },
+    }));
+    
+    const res = await projectCollection.bulkWrite(bulkOps, { ordered: true },);
+    return NextResponse.json(
+      { message: "Updated Projects Successfully", json: res },
+      { status: 200 }
+    );
+
   } catch (error) {
     return new Response("Fatal Error occured while updating user Projects", {
       status: 500,
@@ -85,42 +78,32 @@ export async function PUT(req: Request, context: routeParams) {
   }
 }
 
-export async function POST(req: Request, context: routeParams) {
+export async function POST(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
 
   try {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
 
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
-    let user = await userCollection.findOne({ userId: new ObjectId(userid) });
+    const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-    console.log(user?.projects, !user?.projects);
-    if (!user?.projects) {
-      console.log("Empty");
-      const newuser = await userCollection.findOneAndUpdate(
-        { userId: new ObjectId(userid) },
-        { $set: { projects: [] } },
-        { returnDocument: "after" }
-      );
-      return Response.json({ ...newuser });
-    }
 
-    const data : Array<Document> = await req.json();
-    //@ts-ignore
-    const pushObj : PushOperator<Document> = { projects: { $each: data } }
-    user = await userCollection.findOneAndUpdate(
-      { userId: new ObjectId(userid) },
-      { $push: pushObj }, // Add taskData to tasks array
-      { returnDocument: "after" }
+    const data: Array<Document> = await req.json();
+
+    const dataWithUserId = data.map((value) => ({ ...value, userId: userid }));
+
+    const res = await projectCollection.insertMany(dataWithUserId);
+
+    return NextResponse.json(
+      { message: "Inserted data Successfully", json: res },
+      { status: 200 }
     );
-
-    return new Response("Inserted Projects Successfully", { status: 200 });
   } catch (error) {
     return new Response("Fatal Error occured while inserting user projects", {
       status: 500,
@@ -129,42 +112,39 @@ export async function POST(req: Request, context: routeParams) {
   }
 }
 
-export async function DELETE(req: Request, context: routeParams) {
+export async function DELETE(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
-  const pid = (await req.text()).toString();
+  const projectid = req.nextUrl.searchParams.get("pid");
 
   try {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
 
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
     const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-    console.log(user?.projects, !user?.projects);
-    if (!user?.projects) {
-      console.log("Empty");
-      const newuser = await userCollection.findOneAndUpdate(
-        { userId: new ObjectId(userid) },
-        { $set: { projects: [] } },
-        { returnDocument: "after" }
+
+    const res = await projectCollection.deleteOne({
+      userId: userid,
+      projectid: projectid,
+    });
+
+    if (res.deletedCount) {
+      return NextResponse.json(
+        { message: "No such data to delete", json: res },
+        { status: 201 }
       );
-      return Response.json({ ...newuser });
+    } else {
+      return NextResponse.json(
+        { message: "Deleted data Successfully", json: res },
+        { status: 200 }
+      );
     }
-    console.log(pid,typeof pid);
-    //@ts-ignore
-    const pullObj : PullOperator<Document> =  { projects: { projectid: "1238" } }
-    const newuser = await userCollection.updateOne(
-      { userId: new ObjectId(userid) },
-      { $pull: pullObj }, // Update the matching task
-      // { returnDocument: "after" }
-    );
-    console.log(newuser);
-    return new Response("Deleted Projects Successfully", { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response("Fatal Error occured while deleting user projects", {

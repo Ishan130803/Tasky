@@ -62,10 +62,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `http://localhost:3000/api/users/GetData/${userid}`,
-        updateUrl: `http://localhost:3000/api/users/GetData/${userid}`,
-        removeUrl: `http://localhost:3000/api/users/DeleteData/${userid}`,
-        insertUrl: `http://localhost:3000/api/users/GetData/${userid}`,
+        url: `http://localhost:3000/api/users/GetData/${userid}/1338`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),

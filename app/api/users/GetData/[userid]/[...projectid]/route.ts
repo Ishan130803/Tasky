@@ -1,7 +1,8 @@
 import clientPromise from "@/lib/mongodb";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
-import { ObjectId } from "mongodb";
+import { Document, ObjectId } from "mongodb";
+import { count } from "console";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +22,7 @@ interface routeParams {
   };
 }
 
-export async function GET(req: Request, context: routeParams) {
+export async function GET(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
   const projectid = context.params.projectid[0];
 
@@ -29,115 +30,94 @@ export async function GET(req: Request, context: routeParams) {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
-    console.log(userid)
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
+    const taskCollection =
+      db.collection("userTasks") ?? (await db.createCollection("userTasks"));
+
     const user = await userCollection.findOne({ userId: new ObjectId(userid) });
-
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-
-    const project = await userCollection.findOne(
-      {
-        userId: new ObjectId(userid),
-        "projects": {$elemMatch: {projectid:projectid}},
-      },
-      // { projection: { projects: 1 } }
-    );
-    console.log(project);
-    if (!project) {
-      return new Response("No Such Project id to fetch", { status: 404 });
-    }
-
-    if (!project?.projects?.tasks) {
-      const newuser = await userCollection.findOneAndUpdate(
-        { userId: new ObjectId(userid) },
-        { $set: { "projects.$[project].tasks": [] } },
-        { arrayFilters: [{ "project.projectid": projectid }] }
-      );
-      return Response.json({
-        result: [],
-        count: 0,
-      });
-    } else {
-      return Response.json({
-        result: [...project.projects.tasks],
-        count: project.tasks.length,
-      });
-    }
-  } catch (error) {
-    return new Response("Fatal Error occured while getting user tasks", {
-      status: 500,
+    const project = await projectCollection.findOne({
+      userId: userid,
+      projectid: projectid,
     });
-  }
-}
-
-export async function PUT(req: Request, context: routeParams) {
-  const userid = context.params.userid;
-  const projectid = context.params.projectid[0];
-
-  try {
-    const client = await clientPromise; // Wait for the database connection
-    const db = client.db("Tasky");
-    const userCollection = db.collection("userAccounts");
-
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
-    const user = await userCollection.findOne({ userid: userid });
-
-    if (!user) {
-      return new Response("No Such User", { status: 404 });
-    }
-
-    const project = await userCollection.findOne(
-      {
-        userid: userid,
-        "projects.projectid": projectid,
-      },
-      { projection: { projects: 1 } }
-    );
 
     if (!project) {
-      return new Response("No Such Project id to fetch", { status: 404 });
+      return new Response("No Such Project", { status: 404 });
     }
 
-    if (!project.tasks) {
-      await userCollection.updateOne(
-        { userid: userid },
-        { $set: { "projects.$[project].tasks": [] } },
-        { arrayFilters: [{ "project.projectid": projectid }] }
-      );
-    }
+    const tasks = await taskCollection
+      .find({ userId: userid, projectid: projectid })
+      .toArray();
 
-    const data = await req.json();
-
-    for (const item of data) {
-      const { task_id, ...updatedData } = item; // Extract userid and TaskID from item
-      await userCollection.updateOne(
-        { userid }, // Find user with matching userid and task_id
-        { $set: { "projects.$[project].tasks.$[task]": item } },
-        {
-          arrayFilters: [
-            { "project.projectid": projectid },
-            { "task.task_id": task_id },
-          ],
-          upsert: true,
-        }
-      );
-    }
-    return new Response("Updated Data", { status: 200 });
+    return Response.json({ result: [...tasks], count: tasks.length });
   } catch (error) {
     console.error(error);
-    return new Response("Fatal Error occured while updating user tasks", {
+    return new Response("Fatal Error occured while getting user projects", {
       status: 500,
     });
   }
 }
 
-export async function POST(req: Request, context: routeParams) {
+export async function PUT(req: NextRequest, context: routeParams) {
+  const uid = context.params.userid;
+  const pid = context.params.projectid[0];
+
+  try {
+    const client = await clientPromise; // Wait for the database connection
+    const db = client.db("Tasky");
+    const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
+    const taskCollection =
+      db.collection("userTasks") ?? (await db.createCollection("userTasks"));
+
+    const user = await userCollection.findOne({ userId: new ObjectId(uid) });
+    if (!user) {
+      return new Response("No Such User", { status: 404 });
+    }
+    const project = await projectCollection.findOne({
+      userId: uid,
+      projectid: pid,
+    });
+
+    if (!project) {
+      return new Response("No Such Project", { status: 404 });
+    }
+    const updatedData: Array<Document> = await req.json();
+
+
+    const bulkOps = updatedData.map(
+      ({ projectid, userId, task_id, ...restOfData }) => ({
+        updateOne: {
+          filter: { projectid: pid, userId: uid, task_id: task_id },
+          update: { $set: restOfData },
+        },
+      })
+    );
+
+
+    const res = await taskCollection.bulkWrite(bulkOps, { ordered: true });
+    return NextResponse.json(
+      { message: "Updated Projects Successfully", json: res },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    console.error(error);
+    return new Response(
+      `Fatal Error occured while updating user tasks ${error.message}`,
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+export async function POST(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
   const projectid = context.params.projectid[0];
 
@@ -145,45 +125,39 @@ export async function POST(req: Request, context: routeParams) {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
+    const taskCollection =
+      db.collection("userTasks") ?? (await db.createCollection("userTasks"));
 
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
-    const user = await userCollection.findOne({ userid: userid });
-
+    const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-
-    const project = await userCollection.findOne(
-      {
-        userid: userid,
-        "projects.projectid": projectid,
-      },
-      { projection: { projects: 1 } }
-    );
+    const project = await projectCollection.findOne({
+      userId: userid,
+      projectid: projectid,
+    });
 
     if (!project) {
-      return new Response("No Such Project id to fetch", { status: 404 });
+      return new Response("No Such Project", { status: 404 });
     }
+    const data: Array<Document> = await req.json();
 
-    if (!project.tasks) {
-      await userCollection.updateOne(
-        { userid: userid },
-        { $set: { "projects.$[project].tasks": [] } },
-        { arrayFilters: [{ "project.projectid": projectid }] }
-      );
-    }
+    const dataWithUserIdProjectId = data.map((value) => ({
+      ...value,
+      userId: userid,
+      projectid: projectid,
+    }));
 
-    const data = await req.json();
 
-    await userCollection.updateOne(
-      { userid: userid },
-      { $push: { "projects.$[project].tasks": { $each: data } } }, // Add taskData to tasks array
-      { arrayFilters: [{ "project.projectid": projectid }] }
+    const res = await taskCollection.insertMany(dataWithUserIdProjectId);
+
+    return NextResponse.json(
+      { message: "Inserted tasks Successfully", json: res },
+      { status: 200 }
     );
-
-    return new Response("Inserted Tasks Successfully", { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response("Fatal Error occured while inserting user tasks", {
@@ -202,42 +176,35 @@ export async function DELETE(req: Request, context: routeParams) {
     const client = await clientPromise; // Wait for the database connection
     const db = client.db("Tasky");
     const userCollection = db.collection("userAccounts");
+    const projectCollection =
+      db.collection("userProjects") ??
+      (await db.createCollection("userProjects"));
+    const taskCollection =
+      db.collection("userTasks") ?? (await db.createCollection("userTasks"));
 
-    if (!userid) {
-      return new Response("user Id must be present", { status: 404 });
-    }
-    const user = await userCollection.findOne({ userid: userid });
-
+    const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-
-    const project = await userCollection.findOne(
-      {
-        userid: userid,
-        "projects.projectid": projectid,
-      },
-      { projection: { projects: 1 } }
-    );
+    const project = await projectCollection.findOne({
+      userId: userid,
+      projectid: projectid,
+    });
 
     if (!project) {
-      return new Response("No Such Project id to fetch", { status: 404 });
+      return new Response("No Such Project", { status: 404 });
     }
 
-    if (!project.tasks) {
-      await userCollection.updateOne(
-        { userid: userid },
-        { $set: { "projects.$[project].tasks": [] } },
-        { arrayFilters: [{ "project.projectid": projectid }] }
-      );
-    }
+    const res = await taskCollection.deleteOne({
+      userId: userid,
+      projectid: projectid,
+      task_id: task_id,
+    });
 
-    await userCollection.updateOne(
-      { userid: userid },
-      { $pull: { "projects.$[project].tasks": { task_id: task_id } } },
-      { arrayFilters: [{ "project.projectid": projectid }] }
+    return NextResponse.json(
+      { message: "Inserted tasks Successfully", json: res },
+      { status: 200 }
     );
-    return new Response("Deleted Tasks Successfully", { status: 200 });
   } catch (error) {
     return new Response("Fatal Error occured while deleting user data", {
       status: 500,
