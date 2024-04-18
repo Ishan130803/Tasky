@@ -7,7 +7,10 @@ export default function layout({ children }: { children: ReactNode }) {
     <>
 
         <NextAuthProvider>
+          <div className="bg-black">Hello World
+
           <SyncfusionWrapper >{children}</SyncfusionWrapper>
+          </div>
         </NextAuthProvider>
     </>
   );

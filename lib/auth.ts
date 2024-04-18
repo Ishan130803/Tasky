@@ -45,11 +45,6 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, account, profile, user }) {
-      console.log("This is jwt")
-      console.log(token)
-      console.log(account)
-      console.log(profile)
-      console.log(user)
       if (account) {
         token.accessToken = account?.access_token
         token.providerId = account?.providerAccountId as string
@@ -58,9 +53,6 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token, user }) {
-      console.log('This is sesssion')
-      console.log("token", token)
-      console.log("token", user)
       if (token) {
         session.user.id = token?.id;
         session.user.providerId = token?.providerId
@@ -71,39 +63,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
     async signIn({account,user,profile,credentials}) {
-      console.log("This is sign in call back")
-      console.log('user',user)
-      console.log('acoount',account)
-      console.log('profile',profile)
       return true;
-      if (account?.provider === 'google') {
-        try {
-          const userid = user.id
-          console.log(userid)
-          const res = await fetch('http://localhost:3000/api/users/CreateUser/',{
-            method : "POST",
-            headers : {
-              "Content-Type":"application/json"
-            },
-            body : JSON.stringify({userid : userid})
-          })
-
-          if (res.ok) {
-            console.log("Auth success")
-            return true;
-          } else if(res.status === 300) {
-            console.log("User was already present there Continuing with auth")
-            return false;
-          } else {
-            console.log('Auth un - success')
-            return false;
-          }
-        } catch (error) {
-
-          console.log(error)
-        }
-      }
-
     },
     redirect() {
       return "/dashboard/timeline";

@@ -41,7 +41,10 @@ const GanttData: object[] = [
 
 // let userid = "65fd93e9013acedd6f51891a";
 
-interface IGanttChartProps {}
+interface IGanttChartProps {
+  userid?:string
+  projectid?:string
+}
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
   const userid = session.data?.user?.id;

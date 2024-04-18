@@ -78,9 +78,9 @@ const SideNav: React.FC<SideNavProps> = ({
   handleSelected,
 }) => {
   const navlinks = [
-    { name: "My Actions", route: "/dashboard" },
-    { name: "Project Navigator", route: "/projectNavigator" },
-    { name: "Pinned", route: "/pinned" },
+    { name: "My Actions", route: "/dashboard/MyActions" },
+    { name: "Project Navigator", route: "/dashboard/projectNavigator" },
+    { name: "Pinned", route: "/dashboard/pinned" },
   ];
   const navIcons = [
     <HomeIcon key={navlinks[0].name} />,

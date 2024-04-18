@@ -7,6 +7,8 @@ export default function layout({ children }: { children: ReactNode }) {
     <>
 
         <NextAuthProvider>
+
+          <div>Hello World</div>
           <SyncfusionWrapper >{children}</SyncfusionWrapper>
         </NextAuthProvider>
     </>
