@@ -59,19 +59,18 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     expandState: "isExpanded",
   };
 
+  const baseUrl = global.window?.location?.origin
+  console.log(baseUrl)
+
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `http://localhost:3000/api/users/GetData/${userid}`,
-        updateUrl: `http://localhost:3000/api/users/GetData/${userid}`,
-        removeUrl: `http://localhost:3000/api/users/DeleteData/${userid}`,
-        insertUrl: `http://localhost:3000/api/users/GetData/${userid}`,
+        url: `${baseUrl}/api/users/GetData/${userid}/1338`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),
     [userid]
   );
-
   const editOptions: EditSettingsModel = {
     allowAdding: true,
     allowEditing: true,

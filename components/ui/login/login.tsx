@@ -1,3 +1,4 @@
+'use client'
 import "@/app/globals.css";
 import { FC, useState } from "react";
 import { signIn } from "next-auth/react";
