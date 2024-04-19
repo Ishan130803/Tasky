@@ -8,16 +8,36 @@ import Header from "@/components/ui/dashboard/Header";
 import Toolbar from "@/components/ui/dashboard/Toolbar";
 type Props = {};
 
-export default function Layout({ children }: { children: ReactNode }) {
+interface routeParams {
+  params : {
+    projectId : string
+  }
+}
+interface ILayoutProps {
+  children : React.ReactNode
+  params : {
+    projectId : string
+  }
+}
+
+
+
+const Layout: React.FunctionComponent<ILayoutProps> = ({children,params}) => {
+
   const router = useRouter();
   const url = usePathname();
-
+  const projectId = params.projectId;
+  
+  
   return (
     <>
-      <Header title={"Random"}></Header>
-      <hr className="border-gray-300" />
-      <Toolbar/>
-      <div>{children}</div>
+      <Header title="Project Name"></Header>
+      <Toolbar projectId={projectId}></Toolbar>
+      <div className="w-full h-full">
+        
+        {children}
+      </div>
     </>
   );
 }
+export default Layout;

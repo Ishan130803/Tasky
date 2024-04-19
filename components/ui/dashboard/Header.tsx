@@ -2,7 +2,7 @@
 import React, { ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { LucideFolders, PlusCircle } from "lucide-react";
-import { signOut } from "next-auth/react";
+import { ProfileAvatar } from "../ProfileAvatar";
 type Props = {
   title:string;
 };
@@ -25,12 +25,7 @@ export default function Header({title}:Props) {
             <PlusCircle className="inline" />
             <span className="block">New</span>
           </button>
-          <button
-            onClick={() => signOut()}
-            className="p-1 bg-orange-400/85 rounded-md text-white font-semibold hover:bg-orange-400"
-          >
-            Sign Out
-          </button>
+          <ProfileAvatar className="z-10 hover:cursor-pointer rounded-full" />
         </div>
       </div>
       <hr className="border-gray-300" />

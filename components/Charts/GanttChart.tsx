@@ -1,5 +1,5 @@
 "use client";
-import { FC, useMemo, useEffect,useState } from "react";
+import { FC, useMemo, useEffect, useState } from "react";
 import {
   GanttComponent,
   TaskFieldsModel,
@@ -12,10 +12,20 @@ import {
   RowDD,
   SelectionSettingsModel,
   LabelSettingsModel,
-  Sort
+  TimelineSettingsModel,
+  ColumnsDirective,
+  ColumnDirective,
+  AddDialogFieldsDirective,
+  AddDialogFieldDirective,
+  AddDialogFieldSettings,
+  EditDialogFieldsDirective,
+  EditDialogFieldDirective,
+  AddDialogFieldSettingsModel,
+  Sort,
 } from "@syncfusion/ej2-react-gantt";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSession } from "next-auth/react";
+import { SyncfusionWrapper } from "../ui/wrappers/SyncfusionWrapper";
 
 const GanttData: object[] = [
   {
@@ -41,7 +51,10 @@ const GanttData: object[] = [
 
 // let userid = "65fd93e9013acedd6f51891a";
 
-interface IGanttChartProps {}
+interface IGanttChartProps {
+  userid?: string;
+  projectid?: string;
+}
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
   const userid = session.data?.user?.id;
@@ -57,10 +70,11 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     parentID: "parent_id",
     dependency: "Predecessor",
     expandState: "isExpanded",
+    notes: "Notes"
   };
 
-  const baseUrl = global.window?.location?.origin
-  console.log(baseUrl)
+  const baseUrl = global.window?.location?.origin;
+  console.log(baseUrl);
 
   const datasource = useMemo<DataManager>(
     () =>
@@ -82,37 +96,103 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   };
 
   const labelSettings: LabelSettingsModel = {
-    rightLabel: "Task Name: ${taskData.task_name}",
+    rightLabel: "${taskData.task_name}",
     taskLabel: "${Progress}%",
   };
 
-  const splitterSettings:any={
-    position:"20%"
-  }
+  const dayWorkingTime = [{ from: 9, to: 18 }];
 
-  const toolbarOptions = ["Add", "Delete", "Indent", "Outdent","ExpandAll","CollapseAll"];
+  let timelineSettings: TimelineSettingsModel = {
+    updateTimescaleView: true,
+  };
+
+  const splitterSettings: any = {
+    position: "20%",
+  };
+
+  const toolbarOptions = [
+    "Add",
+    "Delete",
+    "Indent",
+    "Outdent",
+    "ExpandAll",
+    "CollapseAll",
+  ];
   return (
-    userid && (
-      <div className="rounded-xl w-full ">
-      <GanttComponent
-        dataSource={datasource}
-        editSettings={editOptions}
-        toolbar={toolbarOptions}
-        height="600px"
-        taskFields={taskFields}
-        allowSelection={true}
-        allowResizing={true}
-        allowSorting={true}
-        enableContextMenu={true}
-        allowRowDragAndDrop={true}
-        selectionSettings={selectionSettings}
-        allowTaskbarDragAndDrop={true}
-        labelSettings={labelSettings}
-        splitterSettings={splitterSettings}
-      >
-        <Inject services={[RowDD, Edit, Selection, Toolbar, ContextMenu,Sort]} />
-      </GanttComponent>
-      </div>
-    )
+    <SyncfusionWrapper>
+      {userid && (
+        <div className="rounded-xl w-full ">
+          <GanttComponent
+            dataSource={datasource}
+            dateFormat="d MMM yy hh:mm"
+            durationUnit="Hour"
+            editSettings={editOptions}
+            toolbar={toolbarOptions}
+            includeWeekend={true}
+            dayWorkingTime={dayWorkingTime}
+            taskFields={taskFields}
+            timelineSettings={timelineSettings}
+            allowSelection={true}
+            allowSorting={true}
+            allowResizing={true}
+            enableContextMenu={true}
+            allowRowDragAndDrop={true}
+            selectionSettings={selectionSettings}
+            allowTaskbarDragAndDrop={true}
+            labelSettings={labelSettings}
+            baselineColor="#000000"
+            showInlineNotes={true}
+          >
+            <ColumnsDirective>
+              <ColumnDirective
+                headerText="S.No."
+                field="task_id"
+                width="150"
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="Task Name"
+                field="task_name"
+                width="250"
+              ></ColumnDirective>
+            </ColumnsDirective>
+
+            <AddDialogFieldsDirective>
+              <AddDialogFieldDirective
+                type="General"
+                headerText="General"
+                fields={[
+                  "task_id",
+                  "task_name",
+                  "start_time",
+                  "end_time",
+                  "duration",
+                ]}
+              ></AddDialogFieldDirective>
+              <AddDialogFieldDirective type="Dependency"></AddDialogFieldDirective>
+              <AddDialogFieldDirective type="Notes"></AddDialogFieldDirective>
+            </AddDialogFieldsDirective>
+
+            <EditDialogFieldsDirective>
+              <EditDialogFieldDirective
+                type="General"
+                headerText="General"
+                fields={[
+                  "task_id",
+                  "task_name",
+                  "start_time",
+                  "end_time",
+                  "duration",
+                ]}
+              ></EditDialogFieldDirective>
+              <EditDialogFieldDirective type="Dependency"></EditDialogFieldDirective>
+              <EditDialogFieldDirective type="Notes"></EditDialogFieldDirective>
+            </EditDialogFieldsDirective>
+            <Inject
+              services={[RowDD, Edit, Selection, Toolbar, ContextMenu, Sort]}
+            />
+          </GanttComponent>
+        </div>
+      )}
+    </SyncfusionWrapper>
   );
 };

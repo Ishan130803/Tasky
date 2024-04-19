@@ -69,11 +69,10 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 interface SideNavProps {
-  // openForm: React.EventHandler<React.MouseEvent<HTMLElement>>;
-  handleSelected: (value: string) => void;
+  
 }
 
-const SideNav: React.FC<SideNavProps> = ({ handleSelected }) => {
+const SideNav: React.FC<SideNavProps> = ({}) => {
   const [projects, setProjects] = useState<any[]>([]);
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
@@ -91,9 +90,9 @@ const SideNav: React.FC<SideNavProps> = ({ handleSelected }) => {
   }
 
   const navlinks = [
-    { name: "My Actions", route: "/dashboard" },
-    { name: "Project Navigator", route: "/projectNavigator" },
-    { name: "Pinned", route: "/pinned" },
+    { name: "My Actions", route: "/dashboard/" },
+    { name: "Project Navigator", route: "dashboard/projectNavigator" },
+    { name: "Pinned", route: "/dashboard/pinned" },
   ];
   const navIcons = [
     <HomeIcon key={navlinks[0].name} />,
@@ -111,7 +110,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleSelected }) => {
 
   let session = useSession();
   const userid = session.data?.user?.id;
-
+  const baseUrl = global.window?.location?.origin;
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -122,7 +121,7 @@ const SideNav: React.FC<SideNavProps> = ({ handleSelected }) => {
         }
 
         const response = await fetch(
-          `http://localhost:3000/api/users/GetData/${userid}`,
+          `${baseUrl}/api/users/GetData/${userid}`,
           {
             method: "GET",
           }
@@ -173,7 +172,6 @@ const SideNav: React.FC<SideNavProps> = ({ handleSelected }) => {
             <li
               key={navlink.name}
               className="px-4 py-3 hover:bg-gray-600/50 "
-              onClick={() => handleSelected(navlink.name)}
             >
               <Link href={navlink.route}>
                 <div className="flex gap-5  text-white">
@@ -220,7 +218,6 @@ const SideNav: React.FC<SideNavProps> = ({ handleSelected }) => {
                   <li
                     key={project.projectname}
                     className="px-16 py-2 cursor-pointer hover:bg-gray-600/50 "
-                    onClick={() => handleSelected(project.projectName)}
                   >
                     <Link href={`/dashboard/projects/${project.projectid}`}>
                       {project.projectName}

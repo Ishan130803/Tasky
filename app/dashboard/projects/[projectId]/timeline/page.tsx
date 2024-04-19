@@ -6,7 +6,8 @@ export default async function page() {
   
   return (
     <>
-      <GanttChart />
+      {/* <GanttChart /> */}
+      Gantt Chart      
     </>
   );
 }
