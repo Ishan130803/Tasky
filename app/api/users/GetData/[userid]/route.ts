@@ -59,6 +59,13 @@ export async function PUT(req: NextRequest, context: routeParams) {
 
     const updatedData: Array<Document> = await req.json();
 
+    if (updatedData.length === 0) {
+      return NextResponse.json(
+        { message: "No Data to Update" },
+        { status: 201 }
+      );
+    }
+
     const bulkOps = updatedData.map(
       ({ projectid, userId, _id, ...restOfData }) => ({
         updateOne: {
@@ -133,24 +140,40 @@ export async function DELETE(req: NextRequest, context: routeParams) {
       db.collection("userProjects") ??
       (await db.createCollection("userProjects"));
 
+    const taskCollection =
+      db.collection("userTasks") ?? (await db.createCollection("userTasks"));
+
     const user = await userCollection.findOne({ userId: new ObjectId(userid) });
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
 
-    const res = await projectCollection.deleteOne({
+    const proj_res = await projectCollection.deleteOne({
       userId: userid,
       projectid: projectid,
     });
 
-    if (res.deletedCount) {
+    const task_res = await taskCollection.deleteMany({
+      userId: userid,
+      projectid: projectid,
+    });
+
+    if (proj_res.deletedCount) {
       return NextResponse.json(
-        { message: "No such data to delete", json: res },
+        {
+          message: "No such data to delete",
+          proj_res: proj_res,
+          task_res: task_res,
+        },
         { status: 201 }
       );
     } else {
       return NextResponse.json(
-        { message: "Deleted data Successfully", json: res },
+        {
+          message: "Deleted data Successfully",
+          proj_res: proj_res,
+          task_res: task_res,
+        },
         { status: 200 }
       );
     }

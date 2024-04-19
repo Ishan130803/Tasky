@@ -58,8 +58,11 @@ interface IGanttChartProps {
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
   const userid = session.data?.user?.id;
-  console.log(userid);
+  
+  const projectId = props.projectid ?? "1338"
 
+  console.log(projectId);
+  
   const taskFields: TaskFieldsModel = {
     id: "task_id",
     name: "task_name",
@@ -70,7 +73,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     parentID: "parent_id",
     dependency: "Predecessor",
     expandState: "isExpanded",
-    notes: "Notes"
+    notes: "Notes",
   };
 
   const baseUrl = global.window?.location?.origin;
@@ -79,7 +82,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `${baseUrl}/api/users/GetData/${userid}/1338`,
+        url: `${baseUrl}/api/users/GetData/${userid}/${projectId}`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),
@@ -123,7 +126,11 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
       {userid && (
         <div className="rounded-xl w-full ">
           <GanttComponent
+            height="800px"
             dataSource={datasource}
+            style={{
+              height: "900px",
+            }}
             dateFormat="d MMM yy hh:mm"
             durationUnit="Hour"
             editSettings={editOptions}

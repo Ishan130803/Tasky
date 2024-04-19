@@ -1,13 +1,25 @@
 "use client";
 import { GanttChart } from "@/components/Charts/GanttChart";
 
+interface routeParams {
+  params: {
+    projectId: string;
+  };
+}
 
-export default async function page() {
-  
+interface IPageProps {
+  children: React.ReactNode;
+  params: {
+    projectId: string;
+  };
+}
+
+const Page: React.FunctionComponent<IPageProps> = (props) => {
   return (
     <>
-      {/* <GanttChart /> */}
-      Gantt Chart      
+      <GanttChart projectid={props.params.projectId} />
     </>
   );
-}
+};
+
+export default Page;

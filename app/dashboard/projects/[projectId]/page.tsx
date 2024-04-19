@@ -2,11 +2,21 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { GanttChart, InfoIcon, List } from "lucide-react";
-type Props = {};
 
-export default function Page({}: Props) {
-  const router = useRouter();
-  const projectid = router.forward;
+
+interface routeParams {
+  params : {
+    projectId : string
+  }
+}
+interface IPageProps {
+  children : React.ReactNode
+  params : {
+    projectId : string
+  }
+}
+
+const Page: React.FunctionComponent<IPageProps> = (props) => {
   return (
     <>
       <div>
@@ -14,4 +24,7 @@ export default function Page({}: Props) {
 			</div>
     </>
   );
-}
+};
+
+export default Page;
+

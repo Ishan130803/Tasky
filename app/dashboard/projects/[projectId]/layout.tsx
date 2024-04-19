@@ -3,9 +3,9 @@ import React, { ReactNode } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { LucideFolders, PlusCircle } from "lucide-react";
 import { GanttChart, InfoIcon, List } from "lucide-react";
-import { signOut } from "next-auth/react";
 import Header from "@/components/ui/dashboard/Header";
 import Toolbar from "@/components/ui/dashboard/Toolbar";
+import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 type Props = {};
 
 interface routeParams {
@@ -27,7 +27,6 @@ const Layout: React.FunctionComponent<ILayoutProps> = ({children,params}) => {
   const router = useRouter();
   const url = usePathname();
   const projectId = params.projectId;
-  
   
   return (
     <>
