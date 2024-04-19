@@ -1,25 +1,34 @@
 "use client";
+import { Project } from "@/types/projects";
+import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 interface IFormInput {
-  name: string;
+  projectName: string;
   dueDate: Date;
 }
 
 export default function ProjectForm({
   openForm,
+  createProjects
 }: {
   openForm: React.EventHandler<React.MouseEvent<HTMLElement>>;
+  createProjects : (data:Project)=> void;
 }) {
   const { register, handleSubmit,formState:{errors}} = useForm<IFormInput>({
     defaultValues:{
-      name:'',
+      projectName:'',
       
     }
   });
+  let session = useSession();
+  const userid = session.data?.user?.id;
+  console.log(userid);
   const onSubmit = (data: IFormInput)=>{
-    console.log(data);
+    async function submitData(){
+      
+    }
   }
   return (
     <>
@@ -51,13 +60,13 @@ export default function ProjectForm({
             <input
               className="border-[1px] p-1 rounded-sm my-2 outline-transparent outline focus:border-blue-700 block border-slate-300"
               type="text"
-              {...register("name", { required: true, minLength:{value:5,message:"Project name is too short"},validate:(value)=> value.trim().length>0||'Project Name cannot be empty' })}
-              name="name"
-              aria-invalid={errors.name?"true":"false"}
+              {...register("projectName", { required: true, minLength:{value:5,message:"Project name is too short"},validate:(value)=> value.trim().length>0||'Project Name cannot be empty' })}
+              name="projectName"
+              aria-invalid={errors.projectName?"true":"false"}
             />
             {
-              errors.name?.type==='required' && (<p role="alert" className="text-red-600 text-xs">Project name is required</p>) ||
-              errors.name?.type==='minLength' && (<p role="alert" className="text-red-600 text-xs">Project name is too short</p>)
+              errors.projectName?.type==='required' && (<p role="alert" className="text-red-600 text-xs">Project name is required</p>) ||
+              errors.projectName?.type==='minLength' && (<p role="alert" className="text-red-600 text-xs">Project name is too short</p>)
               
             }
           </div>
