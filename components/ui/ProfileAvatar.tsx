@@ -10,6 +10,7 @@ import {
 } from "@mui/joy";
 import { LogOutIcon, Settings } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
+import Image from "next/image";
 import { FC, HTMLAttributes, useState } from "react";
 
 export const ProfileAvatar: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
@@ -32,15 +33,16 @@ export const ProfileAvatar: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
         <Dropdown open={open}>
           <MenuButton
             onClick={() => setopen(true != open)}
-            className="hover:cursor-pointer  border-1 size-fit"
+            className="hover:cursor-pointer  border-1"
           >
-            <Avatar src={imageURL}></Avatar>
+            <Avatar src={imageURL} className="h-8 w-8"></Avatar>
           </MenuButton>
           <Menu>
             <div className="p-4 flex flex-col gap-2">
               <div className="flex gap-4 p-2 hover:bg-slate-200 rounded-xl">
                 <img
                   src={imageURL}
+                  
                   className="size-12 rounded-full ring-blue-700 ring-2"
                   alt=""
                 />

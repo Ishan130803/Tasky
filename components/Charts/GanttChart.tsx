@@ -53,7 +53,7 @@ const GanttData: object[] = [
 
 interface IGanttChartProps {
   userid?: string;
-  projectid?: string;
+  projectid?: string|null;
 }
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
@@ -79,7 +79,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `${baseUrl}/api/users/GetData/${userid}/1338`,
+        url: `${baseUrl}/api/users/GetData/${userid}/${props.projectid}`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),
@@ -126,6 +126,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
             dataSource={datasource}
             dateFormat="d MMM yy hh:mm"
             durationUnit="Hour"
+            height={'550px'}
             editSettings={editOptions}
             toolbar={toolbarOptions}
             includeWeekend={true}

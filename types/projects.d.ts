@@ -1,7 +1,7 @@
 
 interface Project{
     projectid:string;
-    projectname:string;
+    projectName:string;
     dueDate?:Date;
     userId:string;
 

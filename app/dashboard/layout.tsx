@@ -3,7 +3,6 @@ import React, { ReactNode, useEffect, useState } from "react";
 import SideNav from "@/components/ui/dashboard/SideNav";
 
 import SessionProviderWrapper from "@/components/ui/wrappers/SessionProviderWrapper";
-import Toolbar from "@/components/ui/dashboard/Toolbar";
 import { ProjectContextProvider } from "@/context/context";
 
 export default function Layout({ children }: { children: ReactNode }) {

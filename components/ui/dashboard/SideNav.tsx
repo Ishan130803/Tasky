@@ -74,7 +74,8 @@ interface SideNavProps {
 }
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
-  const [projects,setProjects] = useState<any[]>([]);
+  // @ts-ignore
+  let {projects,setProjects} = useProjectContext();
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
@@ -213,7 +214,8 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                 <LoaderIcon></LoaderIcon>
               </li>
             ) : (
-              projects.map((project, index) => {
+              //@ts-ignore
+              projects.map((project) => {
                 return (
                   <li
                     key={project.projectname}
