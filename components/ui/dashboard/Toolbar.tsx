@@ -1,5 +1,5 @@
 import React from "react";
-import { InfoIcon, GanttChart, List } from "lucide-react";
+import { InfoIcon, GanttChart, List, GanttChartIcon } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 type Props = {
@@ -18,6 +18,7 @@ export default function Toolbar({ projectId }: Props) {
             <Link href={`/dashboard/projects/${projectId}`}>Overview</Link>
           </li>
           <li className="p-1 cursor-pointer hover:bg-gray-200 flex rounded-t-md gap-1">
+            <GanttChartIcon className="text-gray-700 w-[14px]"></GanttChartIcon>
             <Link href={`/dashboard/projects/${projectId}/timeline`}>
               Gantt
             </Link>
