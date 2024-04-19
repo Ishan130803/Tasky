@@ -209,6 +209,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                 return (
                   <SidenavProjectListButtons
                     key={index}
+                    setProjectList={setProjects}
                     className="pl-16 py-2 pr-2 cursor-pointer hover:bg-gray-600/50 "
                     projectData={project}
                     userid = {userid!}

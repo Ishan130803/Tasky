@@ -1,6 +1,7 @@
 "use client";
 import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 import { Tooltip } from "@mui/joy";
+import { validateHeaderValue } from "http";
 import { Trash, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
@@ -9,6 +10,7 @@ interface ISidenavProjectListButtonsProps
   extends React.HTMLAttributes<HTMLLIElement> {
   projectData: any;
   userid: string;
+  setProjectList: React.Dispatch<React.SetStateAction<any[]>>;
 }
 // specially crafted to display the project list
 const SidenavProjectListButtons: React.FunctionComponent<
@@ -16,12 +18,20 @@ const SidenavProjectListButtons: React.FunctionComponent<
 > = ({ projectData, userid, className, ...props }) => {
   const deleteProjectHandler = () => {
     const baseUrl = global.window?.location?.origin;
-    fetch(
-      `${baseUrl}/api/users/GetData/${userid}?pid=${projectData.projectid}`,
-      {
-        method: "DELETE",
+    const deleteFronDb = async () => {
+      const res = await fetch(
+        `${baseUrl}/api/users/GetData/${userid}?pid=${projectData.projectid}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (res.ok) {
+        props.setProjectList((prev) =>
+          prev.filter((val) => val.projectid != projectData.projectid)
+        );
       }
-    );
+    };
+    deleteFronDb()
   };
   const activeProject = useActiveProject();
   const isActiveProject: boolean =
