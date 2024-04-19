@@ -1,8 +1,7 @@
 // components/SideNav.js
 "use client";
 
-import { Project } from "@/types/projects";
-import React from "react";
+import React, { useEffect, useState,createContext } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import PushPinIcon from "@mui/icons-material/PushPin";
@@ -14,7 +13,11 @@ import MuiDrawer from "@mui/material/Drawer";
 import MenuIcon from "@mui/icons-material/Menu";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-
+import { useSession } from "next-auth/react";
+import { LoaderIcon } from "lucide-react";
+import ProjectForm from "@/app/dashboard/form/projectform";
+import { Project } from "@/types/projects";
+import { useProjectContext } from "@/context/context";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -44,7 +47,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-end",
-  padding: theme.spacing(0,1),
+  padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
@@ -67,19 +70,29 @@ const Drawer = styled(MuiDrawer, {
 }));
 
 interface SideNavProps {
-  projects: Project[];
-  openForm: React.EventHandler<React.MouseEvent<HTMLElement>>;
-  handleSelected: (value: string) => void;
+  
 }
 
-const SideNav: React.FC<SideNavProps> = ({
-  projects,
-  openForm,
-  handleSelected,
-}) => {
+const SideNav: React.FC<SideNavProps> = ({}) => {
+  const [projects,setProjects] = useState<any[]>([]);
+  const [isLoading, setIsloading] = useState<boolean>(true);
+  const [open, setOpen] = React.useState(false);
+  const [formOpen, setFormOpen] = useState<boolean>(false);
+  const handleForm = () => {
+    if (formOpen) {
+      setFormOpen(false);
+    } else {
+      setFormOpen(true);
+    }
+  };
+
+  const handleProjects = (data:Project)=>{
+    setProjects([...projects,data]);
+  }
+
   const navlinks = [
-    { name: "My Actions", route: "/dashboard/MyActions" },
-    { name: "Project Navigator", route: "/dashboard/projectNavigator" },
+    { name: "My Actions", route: "/dashboard/" },
+    { name: "Project Navigator", route: "dashboard/projectNavigator" },
     { name: "Pinned", route: "/dashboard/pinned" },
   ];
   const navIcons = [
@@ -88,7 +101,6 @@ const SideNav: React.FC<SideNavProps> = ({
     <PushPinIcon key={navlinks[2].name} />,
   ];
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
   const handleClick = () => {
     if (open) {
       setOpen(false);
@@ -96,6 +108,44 @@ const SideNav: React.FC<SideNavProps> = ({
       setOpen(true);
     }
   };
+
+  let session = useSession();
+  const userid = session.data?.user?.id;
+  const baseUrl = global.window?.location?.origin;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!userid) {
+          // If userid is undefined, retry fetching after a delay
+          setTimeout(fetchData, 1000); // Retry after 1 second
+          return;
+        }
+
+        const response = await fetch(
+          `${baseUrl}/api/users/GetData/${userid}`,
+          {
+            method: "GET",
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        console.log("fetched data successfully");
+        const result = await response.json();
+        setProjects(result);
+        console.log("printing data", result);
+        setIsloading(false);
+        console.log(projects);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, [userid]);
+
   return (
     <>
       <Drawer variant="permanent" className="z-10 " open={open}>
@@ -122,7 +172,6 @@ const SideNav: React.FC<SideNavProps> = ({
             <li
               key={navlink.name}
               className="px-4 py-3 hover:bg-gray-600/50 "
-              onClick={() => handleSelected(navlink.name)}
             >
               <Link href={navlink.route}>
                 <div className="flex gap-5  text-white">
@@ -153,24 +202,38 @@ const SideNav: React.FC<SideNavProps> = ({
               }
             >
               <span>Projects</span>
-              <button onClick={openForm}>
+              <button onClick={handleForm}>
                 <AddBoxIcon />
               </button>
             </div>
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
-            {projects.map((project, index) => (
-              <li
-                key={project.name}
-                className="px-16 py-2 cursor-pointer hover:bg-gray-600/50 "
-                onClick={() => handleSelected(project.name)}
-              >
-                <Link href={`/dashboard/projects/${project.id}`}>{project.name}</Link>
+            {isLoading ? (
+              <li className="px-16 py-2 rotate-180">
+                <LoaderIcon></LoaderIcon>
               </li>
-            ))}
+            ) : (
+              projects.map((project, index) => {
+                return (
+                  <li
+                    key={project.projectname}
+                    className="px-16 py-2 cursor-pointer hover:bg-gray-600/50 "
+                  >
+                    <Link href={`/dashboard/projects/${project.projectid}`}>
+                      {project.projectName}
+                    </Link>
+                  </li>
+                );
+              })
+            )}
           </ul>
         </ul>
       </Drawer>
+      {formOpen && (
+        <div className="fixed top-0 left-0  w-full h-full bg-black/10 flex justify-center items-center  content-center z-20">
+          <ProjectForm openForm={handleForm} createProjects={handleProjects}></ProjectForm>
+        </div>
+      )}
     </>
   );
 };

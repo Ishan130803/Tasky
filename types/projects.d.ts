@@ -1,10 +1,9 @@
 
 interface Project{
-    id:string;
-    name:string;
+    projectid:string;
+    projectname:string;
     dueDate?:Date;
-    users:string[];
-    tasks:string[];
+    userId:string;
 
 }
 export {Project};
