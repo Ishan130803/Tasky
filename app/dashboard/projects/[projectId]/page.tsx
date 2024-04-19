@@ -1,12 +1,8 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
-import { GanttChart, InfoIcon, List } from "lucide-react";
-type Props = {};
 
-export default function Page({}: Props) {
-  const router = useRouter();
-  const projectid = router.forward;
+
+const Page = (props:any) => {
   return (
     <>
       <div className=" p-2 bg-gray-100 grid grid-cols-3 gap-4">
@@ -34,4 +30,7 @@ export default function Page({}: Props) {
 			</div>
     </>
   );
-}
+};
+
+export default Page;
+

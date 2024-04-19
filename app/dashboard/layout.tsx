@@ -4,22 +4,29 @@ import SideNav from "@/components/ui/dashboard/SideNav";
 
 import SessionProviderWrapper from "@/components/ui/wrappers/SessionProviderWrapper";
 import { ProjectContextProvider } from "@/context/context";
+import { ActiveProjectContext } from "@/context/ActiveProjectContextProvider";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const [projects,setProjects] = useState<any[]>();
-  
+  const [projects, setProjects] = useState<any[]>();
+  const [activeProject, setactiveProject] = useState<any>({});  
+  const [activeProjectId, setactiveProjectId] = useState<string>(null as unknown as string);    
+
   return (
     <>
       <ProjectContextProvider>
         <SessionProviderWrapper>
-          <div className="relative w-full h-full">
-            <div className={"flex relative w-full h-full "}>
-              <SideNav></SideNav>
-              <div className="w-[100%] h-full max-w-full  min-w-[70%]">
-                <div className="w-full h-full overflow-hidden">{children}</div>
+          <ActiveProjectContext.Provider value={{project : activeProject, setProject : setactiveProject}}>
+            <div className="relative w-full h-full">
+              <div className={"flex relative w-full h-full "}>
+                <SideNav></SideNav>
+                <div className="w-[100%] h-full max-w-full  min-w-[70%]">
+                  <div className="w-full h-full overflow-hidden">
+                    {children}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          </ActiveProjectContext.Provider>
         </SessionProviderWrapper>
       </ProjectContextProvider>
     </>

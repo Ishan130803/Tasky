@@ -90,6 +90,12 @@ export async function PUT(req: NextRequest, context: routeParams) {
     }
     const updatedData: Array<Document> = await req.json();
 
+    if (updatedData.length === 0) {
+      return NextResponse.json(
+        { message: "No Data to Update" },
+        { status: 201 }
+      )
+    }
 
     const bulkOps = updatedData.map(
       //@ts-ignore

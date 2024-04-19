@@ -1,15 +1,19 @@
 "use client";
 import { GanttChart } from "@/components/Charts/GanttChart";
-import { useParams } from "next/navigation";
 
-export default function Page() {
-  const params = useParams();
-  const projectId = params.projectId;
-  console.log(projectId);
+
+interface IPageProps {
+  params: {
+    projectId: string;
+  };
+}
+
+const Page = (props : any) => {
   return (
     <>
-      <GanttChart projectid={projectId}/>
-      Gantt Chart      
+      <GanttChart projectid={props.params.projectId} />
     </>
   );
-}
+};
+
+export default Page;

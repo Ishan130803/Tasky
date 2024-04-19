@@ -1,7 +1,7 @@
 // components/SideNav.js
 "use client";
 
-import React, { useEffect, useState,createContext } from "react";
+import React, { useEffect, useState, createContext } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import PushPinIcon from "@mui/icons-material/PushPin";
@@ -18,6 +18,7 @@ import { LoaderIcon } from "lucide-react";
 import ProjectForm from "@/app/dashboard/form/projectform";
 import { Project } from "@/types/projects";
 import { useProjectContext } from "@/context/context";
+import SidenavProjectListButtons from "./SideNavProjectListButtons";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -69,9 +70,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-interface SideNavProps {
-  
-}
+interface SideNavProps {}
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
   // @ts-ignore
@@ -87,9 +86,9 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
     }
   };
 
-  const handleProjects = (data:Project)=>{
-    setProjects([...projects,data]);
-  }
+  const handleProjects = (data: Project) => {
+    setProjects([...projects, data]);
+  };
 
   const navlinks = [
     { name: "My Actions", route: "/dashboard/" },
@@ -122,18 +121,14 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
           return;
         }
 
-        const response = await fetch(
-          `${baseUrl}/api/users/GetData/${userid}`,
-          {
-            method: "GET",
-          }
-        );
+        const response = await fetch(`${baseUrl}/api/users/GetData/${userid}`, {
+          method: "GET",
+        });
 
         if (!response.ok) {
           throw new Error("Failed to fetch data");
         }
 
-        console.log("fetched data successfully");
         const result = await response.json();
         setProjects(result);
         console.log("printing data", result);
@@ -170,10 +165,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
         <hr className="border-slate-700" />
         <ul>
           {navlinks.map((navlink, index) => (
-            <li
-              key={navlink.name}
-              className="px-4 py-3 hover:bg-gray-600/50 "
-            >
+            <li key={navlink.name} className="px-4 py-3 hover:bg-gray-600/50 ">
               <Link href={navlink.route}>
                 <div className="flex gap-5  text-white">
                   <div>{navIcons[index]}</div>
@@ -215,16 +207,17 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
               </li>
             ) : (
               //@ts-ignore
-              projects.map((project) => {
+              projects.map((project,index) => {
                 return (
-                  <li
-                    key={project.projectname}
-                    className="px-16 py-2 cursor-pointer hover:bg-gray-600/50 "
+                  <SidenavProjectListButtons
+                    key={index}
+                    setProjectList={setProjects}
+                    className="pl-16 py-2 pr-2 cursor-pointer hover:bg-gray-600/50 "
+                    projectData={project}
+                    userid = {userid!}
                   >
-                    <Link href={`/dashboard/projects/${project.projectid}`}>
-                      {project.projectName}
-                    </Link>
-                  </li>
+                    {`${index+1}. ${project.projectName}`}
+                  </SidenavProjectListButtons>
                 );
               })
             )}
@@ -233,7 +226,10 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
       </Drawer>
       {formOpen && (
         <div className="fixed top-0 left-0  w-full h-full bg-black/10 flex justify-center items-center  content-center z-20">
-          <ProjectForm openForm={handleForm} createProjects={handleProjects}></ProjectForm>
+          <ProjectForm
+            openForm={handleForm}
+            createProjects={handleProjects}
+          ></ProjectForm>
         </div>
       )}
     </>
