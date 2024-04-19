@@ -1,7 +1,7 @@
 // components/SideNav.js
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,createContext } from "react";
 import HomeIcon from "@mui/icons-material/Home";
 import AddBoxIcon from "@mui/icons-material/AddBox";
 import PushPinIcon from "@mui/icons-material/PushPin";
@@ -17,6 +17,7 @@ import { useSession } from "next-auth/react";
 import { LoaderIcon } from "lucide-react";
 import ProjectForm from "@/app/dashboard/form/projectform";
 import { Project } from "@/types/projects";
+import { useProjectContext } from "@/context/context";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -73,7 +74,7 @@ interface SideNavProps {
 }
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
-  const [projects, setProjects] = useState<any[]>([]);
+  const [projects,setProjects] = useState<any[]>([]);
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
@@ -133,9 +134,8 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
 
         console.log("fetched data successfully");
         const result = await response.json();
+        setProjects(result);
         console.log("printing data", result);
-
-        setProjects([...result]);
         setIsloading(false);
         console.log(projects);
       } catch (err) {
