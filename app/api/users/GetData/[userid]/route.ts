@@ -100,7 +100,7 @@ export async function POST(req: NextRequest, context: routeParams) {
 
     const dataWithUserId = data.map((value) => ({
       ...value,
-      projectid: uuidv4.toString(),
+      projectid: uuidv4(),
       userId: userid,
     }));
 

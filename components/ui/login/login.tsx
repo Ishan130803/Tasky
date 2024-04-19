@@ -1,8 +1,9 @@
-'use client'
+"use client";
 import "@/app/globals.css";
 import { FC, useState } from "react";
 import { signIn } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { CircularProgress } from "@mui/joy";
 
 export default function Login() {
   const [loading, setloading] = useState<boolean>(false);
@@ -43,15 +44,19 @@ export default function Login() {
             <span>or</span>
           </div>
           <div className="">
-            {loading ? (
-              <Loader2 className="animate-spin mx-auto"></Loader2>
-            ) : (
-              <button className="min-w-min  md:w-[55%] p-3 text-black md:border md:border-gray-400  rounded-full sm:rounded-3xl min-w-min block mx-auto" onClick={handleClick}>
-                <div className="google-icon flex justify-center gap-6">
+            <button
+              className="min-w-min  md:w-[55%] p-3 text-black md:border md:border-gray-400  rounded-full sm:rounded-3xl block mx-auto"
+              disabled={loading}
+              onClick={handleClick}
+            >
+              <div className="google-icon flex items-center gap-4 justify-center">
+                {loading ? (
+                  <CircularProgress size="sm"></CircularProgress>
+                ) : (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    width={'24px'}
-                    height={'24px'}
+                    width={"24px"}
+                    height={"24px"}
                     viewBox="0 0 326667 333333"
                     shape-rendering="geometricPrecision"
                     text-rendering="geometricPrecision"
@@ -76,11 +81,10 @@ export default function Login() {
                       fill="#ea4335"
                     />
                   </svg>
-                  <span className="hidden md:block">Sign in with Google</span>
-                </div>
-                
-              </button>
-            )}
+                )}
+                <span className="hidden md:block">Sign in with Google</span>
+              </div>
+            </button>
           </div>
         </form>
       </div>
