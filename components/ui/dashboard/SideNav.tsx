@@ -130,9 +130,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
 
         const result = await response.json();
         setProjects(result);
-        console.log("printing data", result);
         setIsloading(false);
-        console.log(projects);
       } catch (err) {
         console.error(err);
       }

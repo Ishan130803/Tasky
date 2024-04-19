@@ -27,7 +27,6 @@ export default function ProjectForm({
   });
   let session = useSession();
   const userid = session.data?.user?.id;
-  console.log(userid);
   const baseUrl = global.window?.location?.origin;
   const onSubmit = (data: IFormInput) => {
     const dataToSubmit = [data];

@@ -2,12 +2,12 @@
 import CustomDateTimePicker from "@/components/ui/dashboard/project/CustorDateTimePicker";
 import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 import { ProjectContext } from "@/context/context";
-import { FormLabel } from "@mui/joy";
+import { CircularProgress, FormLabel, Snackbar } from "@mui/joy";
 import { TextField } from "@mui/material";
 import SliderValueLabel from "@mui/material/Slider/SliderValueLabel";
 import dayjs from "dayjs";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 interface routeParams {
   params: {
@@ -17,24 +17,42 @@ interface routeParams {
 
 const Page = (props: routeParams) => {
   const activeProject = useActiveProject();
+  const [showSnackBar, setshowSnackBar] = useState<boolean>(false);
+  const [snackbarVariant, setsnackbarVariant] = useState<
+    "neutral" | "success" | "warning"
+  >("neutral");
+  const [loading, setloading] = useState<boolean>(false);
   const onChangeHandler = (field: string, value: any) => {
     const newObj = { ...activeProject?.project, [field]: value };
     activeProject.setProject({ ...newObj });
   };
-  console.log(activeProject);
+  const baseUrl = global.window?.location?.origin;
   useEffect(() => {
-    const baseUrl = global.window?.location?.origin;
-
+    setshowSnackBar(true);
+    setsnackbarVariant("neutral");
     const updateData = async () => {
-      const res = fetch(
-        `${baseUrl}/api/users/GetData/${activeProject.project.userId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify([activeProject.project]),
+      try {
+        const res = await fetch(
+          `${baseUrl}/api/users/GetData/${activeProject.project.userId}`,
+          {
+            method: "PUT",
+            body: JSON.stringify([activeProject.project]),
+          }
+        );
+        if (res.ok) {
+          setshowSnackBar(true);
+          setsnackbarVariant("success");
+        } else {
+          throw new Error("Something went Wrong");
         }
-      );
+      } catch (err) {
+        setshowSnackBar(true);
+        setsnackbarVariant("warning");
+      } finally {
+        setshowSnackBar(true);
+      }
     };
-    const timeOut = setTimeout(updateData,2000)
+    const timeOut = setTimeout(updateData,2000);
 
     return () => {
       clearTimeout(timeOut);
@@ -44,6 +62,30 @@ const Page = (props: routeParams) => {
   return (
     <>
       <div className="container flex flex-col gap-10">
+        <Snackbar
+          autoHideDuration={2000}
+
+          open={showSnackBar}
+          variant={"solid"}
+          color={snackbarVariant}
+          onClose={(event, reason) => {
+            if (reason === "clickaway") {
+              return;
+            }
+            setshowSnackBar(false);
+          }}
+        >
+          {snackbarVariant === "neutral" ? (
+            <span className="flex gap-2">
+              <CircularProgress size="sm" />
+              <span>Saving...</span>
+            </span>
+          ) : snackbarVariant === "success" ? (
+            "Successfully Saved Data"
+          ) : (
+            "Something went wrong"
+          )}
+        </Snackbar>
         <div>
           <FormLabel className="text-2xl my-2">Project Title</FormLabel>
           <TextField

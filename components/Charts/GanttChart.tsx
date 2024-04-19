@@ -61,7 +61,6 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   
   const projectId = props.projectid ?? "1338"
 
-  console.log(projectId);
   
   const taskFields: TaskFieldsModel = {
     id: "task_id",
@@ -77,7 +76,6 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   };
 
   const baseUrl = global.window?.location?.origin;
-  console.log(baseUrl);
 
   const datasource = useMemo<DataManager>(
     () =>

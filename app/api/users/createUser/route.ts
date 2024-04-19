@@ -2,7 +2,6 @@ import clientPromise from "@/lib/mongodb";
 
 export async function POST(request: Request) {
   const data = await request.json()
-  console.log('route',data);
   const userid = data.userid
   if (!userid) {
     return new Response("Invalid User Id Received while creating User", {
