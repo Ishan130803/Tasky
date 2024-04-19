@@ -210,8 +210,8 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
             {isLoading ? (
-              <li className="px-16 py-2 rotate-180">
-                <LoaderIcon></LoaderIcon>
+              <li className="px-16 py-2">
+                <LoaderIcon className="animate-spin"></LoaderIcon>
               </li>
             ) : (
               //@ts-ignore

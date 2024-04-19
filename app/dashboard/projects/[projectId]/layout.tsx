@@ -29,8 +29,7 @@ const Layout: React.FunctionComponent<ILayoutProps> = ({children,params}) => {
   const {projects,setProjects} = useProjectContext();
   const [project,setProject] = useState<Project>();
   const [title,setTitle] = useState<string>('Title');
-  const router = useRouter();
-  const url = usePathname();
+  
   const projectId = params.projectId;
   useEffect(()=>{
     //@ts-ignore

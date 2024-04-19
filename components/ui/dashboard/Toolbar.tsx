@@ -20,7 +20,7 @@ export default function Toolbar({ projectId,dueDate }: Props) {
           </li>}
           <li className="p-1 cursor-pointer hover:bg-gray-200 flex rounded-t-md gap-1">
             <InfoIcon className="text-gray-700 w-[14px] " />
-            <Link href={`/dashboard/projects/${projectId}`}>Overview</Link>
+            <a href={`/dashboard/projects/${projectId}`} className="no-underline">Overview</a>
           </li>
           <li className="p-1 cursor-pointer hover:bg-gray-200 flex rounded-t-md gap-1">
             <Link href={`/dashboard/projects/${projectId}/timeline`}>
