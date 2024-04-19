@@ -9,13 +9,14 @@ import { ActiveProjectContext } from "@/context/ActiveProjectContextProvider";
 
 export default function Layout({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<any[]>();
-  
+  const [activeProject, setactiveProject] = useState<any>({});  
+  const [activeProjectId, setactiveProjectId] = useState<string>(null as unknown as string);    
 
   return (
     <>
       <ProjectContextProvider>
         <SessionProviderWrapper>
-          <ActiveProjectContext.Provider value={null}>
+          <ActiveProjectContext.Provider value={{project : activeProject, setProject : setactiveProject}}>
             <div className="relative w-full h-full">
               <div className={"flex relative w-full h-full "}>
                 <SideNav></SideNav>

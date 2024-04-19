@@ -14,6 +14,7 @@ interface routeParams {
 
 export async function GET(req: NextRequest, context: routeParams) {
   const userid = context.params.userid;
+  const pid = req.nextUrl.searchParams.get("pid");
 
   try {
     const client = await clientPromise; // Wait for the database connection
@@ -27,11 +28,16 @@ export async function GET(req: NextRequest, context: routeParams) {
     if (!user) {
       return new Response("No Such User", { status: 404 });
     }
-
-    const projects = await projectCollection.find({ userId: userid }).toArray();
-
-    console.log(projects);
-
+    let projects;
+    if (!pid) {
+      projects = await projectCollection
+        .find({ userId: userid })
+        .toArray();
+    } else {
+      projects = await projectCollection
+        .find({ userId: userid, projectid : pid})
+        .toArray();
+    }
     return Response.json([...projects]);
   } catch (error) {
     console.error(error);

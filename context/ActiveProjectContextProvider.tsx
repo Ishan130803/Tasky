@@ -1,5 +1,8 @@
 import { Context, createContext, useContext } from "react";
-type IActiveProjectContext = any
+interface IActiveProjectContext {
+  project : any,
+  setProject : any
+}
 /**
  * ## ActiveProjectContext
  */

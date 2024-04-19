@@ -1,4 +1,5 @@
 "use client";
+import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 import { Tooltip } from "@mui/joy";
 import { Trash, Trash2 } from "lucide-react";
 import Link from "next/link";
@@ -12,7 +13,7 @@ interface ISidenavProjectListButtonsProps
 // specially crafted to display the project list
 const SidenavProjectListButtons: React.FunctionComponent<
   ISidenavProjectListButtonsProps
-> = ({ projectData, userid, ...props }) => {
+> = ({ projectData, userid, className, ...props }) => {
   const deleteProjectHandler = () => {
     const baseUrl = global.window?.location?.origin;
     fetch(
@@ -22,11 +23,20 @@ const SidenavProjectListButtons: React.FunctionComponent<
       }
     );
   };
+  const activeProject = useActiveProject();
+  const isActiveProject: boolean =
+    activeProject.project.projectid == projectData.projectid;
   return (
     <Tooltip title={projectData.projectName ?? ""} variant="solid">
       <Link href={`/dashboard/projects/${projectData.projectid}`}>
-        <li {...props}>
-          <span className="flex justify-between content-center w-full">
+        <li className="flex justify-between content-center ml-12 mr-2 my-1 cursor-pointer">
+          <span
+            className={`flex justify-between hover:bg-gray-600/50 w-full p-2 rounded-xl ${
+              isActiveProject
+                ? "bg-white text-slate-700 hover:bg-slate-200"
+                : ""
+            }`}
+          >
             <span className="line-clamp-1 text-ellipsis">{props.children}</span>
             <Trash2
               onClick={deleteProjectHandler}
