@@ -57,21 +57,22 @@ export async function PUT(req: NextRequest, context: routeParams) {
       return new Response("No Such User", { status: 404 });
     }
 
-    const updatedData:Array<Document> = await req.json();
+    const updatedData: Array<Document> = await req.json();
 
-    const bulkOps = updatedData.map(({ projectid, userId, _id, ...restOfData }) => ({
-      updateOne: {
-        filter: { projectid: projectid, userId: userid},
-        update: { $set: restOfData },
-      },
-    }));
-    
-    const res = await projectCollection.bulkWrite(bulkOps, { ordered: true },);
+    const bulkOps = updatedData.map(
+      ({ projectid, userId, _id, ...restOfData }) => ({
+        updateOne: {
+          filter: { projectid: projectid, userId: userid },
+          update: { $set: restOfData },
+        },
+      })
+    );
+
+    const res = await projectCollection.bulkWrite(bulkOps, { ordered: true });
     return NextResponse.json(
       { message: "Updated Projects Successfully", json: res },
       { status: 200 }
     );
-
   } catch (error) {
     return new Response("Fatal Error occured while updating user Projects", {
       status: 500,
@@ -97,12 +98,19 @@ export async function POST(req: NextRequest, context: routeParams) {
 
     const data: Array<Document> = await req.json();
 
-    const dataWithUserId = data.map((value) => ({ ...value, projectid : uuidv4.toString(), userId: userid }));
+    const dataWithUserId = data.map((value) => ({
+      ...value,
+      projectid: uuidv4.toString(),
+      userId: userid,
+    }));
 
     const res = await projectCollection.insertMany(dataWithUserId);
 
     return NextResponse.json(
-      { message: "Inserted data Successfully", json: res },
+      {
+        message: "Inserted data Successfully",
+        json: { serverResponse: res, data: dataWithUserId },
+      },
       { status: 200 }
     );
   } catch (error) {
