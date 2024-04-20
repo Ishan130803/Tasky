@@ -57,15 +57,6 @@ interface IGanttChartProps {
 }
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
-  const [userid, setuserid] = useState<string | undefined>(session?.data?.user?.id);
-
-  useEffect(() => {
-    setTimeout(() => {
-      if (!userid) {
-        setuserid(session?.data?.user.id);
-      }
-    }, 100);
-  }, [userid]);
 
   const projectId = props.projectid ?? "1338";
 
@@ -87,11 +78,11 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `${baseUrl}/api/users/GetData/${userid}/${projectId}`,
+        url: `${baseUrl}/api/users/GetData/${props.userid}/${projectId}`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),
-    [userid]
+    [props.userid]
   );
   const editOptions: EditSettingsModel = {
     allowAdding: true,
@@ -129,7 +120,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
 
   return (
     <SyncfusionWrapper>
-      {userid && (
+      {props.userid && (
         <div className="rounded-xl w-full ">
           <GanttComponent
             height="800px"
