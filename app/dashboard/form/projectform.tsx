@@ -6,7 +6,15 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 interface IFormInput {
   projectName: string;
-  dueDate: Date;
+  dueDate: string;
+}
+
+const getTodayDate = ()=>{
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;;
 }
 
 export default function ProjectForm({
@@ -31,6 +39,7 @@ export default function ProjectForm({
   const baseUrl = global.window?.location?.origin;
   const onSubmit = (data: IFormInput) => {
     const dataToSubmit = [data];
+    console.log(data);
     function submitData() {
       if (!userid) {
         setTimeout(submitData, 1000); // Retry after 1 second
@@ -54,6 +63,8 @@ export default function ProjectForm({
     }
     submitData();
   };
+
+  
   return (
     <>
       <div className="w-[550px] border-[1px] relative bg-white  rounded-md border-gray-200 p-7">
@@ -109,6 +120,7 @@ export default function ProjectForm({
             </label>
             <input
               type="Date"
+              defaultValue={getTodayDate()}
               className="block my-2 border-[1px] border-gray-300 rounded-sm p-1 focus:border-blue-700 outline-transparent outline"
               {...register("dueDate")}
             />
