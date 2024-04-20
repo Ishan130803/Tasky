@@ -3,6 +3,7 @@ import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 import { Tooltip } from "@mui/joy";
 import { validateHeaderValue } from "http";
 import { Trash, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import * as React from "react";
 
@@ -16,6 +17,8 @@ interface ISidenavProjectListButtonsProps
 const SidenavProjectListButtons: React.FunctionComponent<
   ISidenavProjectListButtonsProps
 > = ({ projectData, userid, className, ...props }) => {
+  const router = useRouter();
+  const activeProject = useActiveProject();
   const deleteProjectHandler = () => {
     const baseUrl = global.window?.location?.origin;
     const deleteFronDb = async () => {
@@ -26,14 +29,17 @@ const SidenavProjectListButtons: React.FunctionComponent<
         }
       );
       if (res.ok) {
+        if (activeProject.project.projectid == projectData.projectid) {
+          router.replace(`${baseUrl}/dashboard`);
+        }
         props.setProjectList((prev) =>
           prev.filter((val) => val.projectid != projectData.projectid)
         );
       }
     };
-    deleteFronDb()
+    deleteFronDb();
   };
-  const activeProject = useActiveProject();
+
   const isActiveProject: boolean =
     activeProject.project.projectid == projectData.projectid;
   return (
@@ -49,7 +55,10 @@ const SidenavProjectListButtons: React.FunctionComponent<
           >
             <span className="line-clamp-1 text-ellipsis">{props.children}</span>
             <Trash2
-              onClick={deleteProjectHandler}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteProjectHandler();
+              }}
               className="flex-shrink-0 hover:bg-slate-300 rounded-lg p-1 text-xl"
             ></Trash2>
           </span>

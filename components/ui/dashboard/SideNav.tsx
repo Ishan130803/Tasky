@@ -200,7 +200,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
           <ul className={open ? "opacity-100" : "opacity-0"}>
             {isLoading ? (
               <li className="px-16 py-2 rotate-180">
-                <LoaderIcon></LoaderIcon>
+                <LoaderIcon className="animate-spin"></LoaderIcon>
               </li>
             ) : (
               projectList.projects.map((project, index) => {

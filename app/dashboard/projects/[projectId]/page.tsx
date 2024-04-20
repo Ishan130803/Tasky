@@ -24,12 +24,11 @@ const Page = (props: routeParams) => {
   >("neutral");
   const onChangeHandler = (field: string, value: any) => {
     const newObj = { ...activeProject?.project, [field]: value };
-    projectList.setProjects((prev) =>
-      prev.map((value) => {
-        if (value.projectid == newObj.projectid) {
+    projectList.setProjects((prev) => prev.map((value) => {
+        if (value.projectid === newObj.projectid) {
           return newObj;
         } else {
-          return prev;
+          return value;
         }
       })
     );
