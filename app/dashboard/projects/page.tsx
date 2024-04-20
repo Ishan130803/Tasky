@@ -4,6 +4,7 @@ import { useProjectList } from "@/context/ProjectListContext";
 import { getOffsetLeft } from "@mui/material";
 import { useRouter } from "next/navigation";
 import Header from "@/components/ui/dashboard/Header";
+import dayjs, { Dayjs, isDayjs } from "dayjs";
 type Props = {};
 
 export default function Page({}: Props) {
@@ -11,14 +12,8 @@ export default function Page({}: Props) {
   const projectList = projectContext.projects;
   const router = useRouter();
   const baseUrl = global.window?.location?.origin;
-  const getTodayDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    return `${year}-${month}-${day}`;
-  };
-  const today = new Date(getTodayDate());
+  
+  const today = dayjs()
 
   return (
     <>
@@ -26,7 +21,8 @@ export default function Page({}: Props) {
       <div className="w-[90%] mx-auto p-4 mt-6 min-w-max">
         <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
           {projectList.map((project) => {
-            const date = new Date(project.dueDate);
+            const duedate : Dayjs|undefined = project.dueDate ? dayjs(project.dueDate) : undefined;
+            const startDate : Dayjs|undefined= project.startDate ? dayjs(project.startDate) : undefined;
 
             return (
               <div
@@ -42,14 +38,16 @@ export default function Page({}: Props) {
                   {project.projectName}
                 </h2>
                 <span
+                  className={`block text-base text-blue-500`}
+                >
+                  Start Date & time : {isDayjs(startDate) ? startDate.format('DD-MM-YYYY HH:mm') : "NA"}
+                </span>
+                <span
                   className={`block text-base ${
-                    date < today ? "text-red-500" : "text-blue-500"
+                    (duedate && (duedate.isBefore(today))) ? "text-red-500" : "text-blue-500"
                   }`}
                 >
-                  Due:&nbsp;{" "}
-                  {project.dueDate
-                    ? project.dueDate.split("-").reverse().join("-")
-                    : "NA"}
+                  Due Date & time   : {isDayjs(duedate) ? duedate.format('DD-MM-YYYY HH:mm') : "NA"}
                 </span>
               </div>
             );
