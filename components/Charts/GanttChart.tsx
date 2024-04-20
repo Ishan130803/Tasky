@@ -22,6 +22,7 @@ import {
   EditDialogFieldDirective,
   AddDialogFieldSettingsModel,
   Sort,
+  Resize,
 } from "@syncfusion/ej2-react-gantt";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSession } from "next-auth/react";
@@ -71,6 +72,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     dependency: "Predecessor",
     expandState: "isExpanded",
     notes: "Notes",
+    durationUnit: "durationUnit",
   };
 
   const baseUrl = global.window?.location?.origin;
@@ -89,6 +91,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     allowEditing: true,
     allowDeleting: true,
     allowTaskbarEditing: true,
+    mode: "Dialog",
   };
   const selectionSettings: SelectionSettingsModel = {
     type: "Multiple",
@@ -99,7 +102,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     taskLabel: "${Progress}%",
   };
 
-  const dayWorkingTime = [{ from: 9, to: 18 }];
+  const dayWorkingTime = [{ from: 6, to: 22 }];
 
   let timelineSettings: TimelineSettingsModel = {
     updateTimescaleView: true,
@@ -116,6 +119,9 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     "Outdent",
     "ExpandAll",
     "CollapseAll",
+    "ZoomIn",
+    "ZoomOut",
+    "ZoomToFit",
   ];
 
   return (
@@ -151,12 +157,27 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
               <ColumnDirective
                 headerText="S.No."
                 field="task_id"
-                width="150"
+                minWidth={150}
               ></ColumnDirective>
               <ColumnDirective
                 headerText="Task Name"
                 field="task_name"
-                width="250"
+                minWidth={150}
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="Start Time"
+                field="start_time"
+                minWidth={100}
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="End Time"
+                field="end_time"
+                minWidth={100}
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="Progress"
+                field="Progress"
+                minWidth={100}
               ></ColumnDirective>
             </ColumnsDirective>
 
@@ -192,7 +213,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
               <EditDialogFieldDirective type="Notes"></EditDialogFieldDirective>
             </EditDialogFieldsDirective>
             <Inject
-              services={[RowDD, Edit, Selection, Toolbar, ContextMenu, Sort]}
+              services={[RowDD, Edit, Selection, Toolbar, ContextMenu, Resize]}
             />
           </GanttComponent>
         </div>

@@ -2,7 +2,7 @@
 import CustomDateTimePicker from "@/components/ui/dashboard/project/CustorDateTimePicker";
 import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 import { useProjectList } from "@/context/ProjectListContext";
-import { CircularProgress, FormLabel, Snackbar } from "@mui/joy";
+import { CircularProgress, Snackbar } from "@mui/joy";
 import { TextField } from "@mui/material";
 import SliderValueLabel from "@mui/material/Slider/SliderValueLabel";
 import dayjs from "dayjs";
@@ -94,7 +94,7 @@ const Page = (props: routeParams) => {
           )}
         </Snackbar>
         <div>
-          <FormLabel className="text-2xl my-2">Project Title</FormLabel>
+          <h2 className="text-2xl my-2">Project Title</h2>
           <TextField
             className="text-xl"
             variant="standard"
@@ -106,9 +106,9 @@ const Page = (props: routeParams) => {
         </div>
         <div className="flex w-full justify-evenly">
           <div className="hover:bg-slate-200 p-5 rounded-xl">
-            <FormLabel className="my-2 text-xl text-[#2196f3] font-bold justify-center">
+            <h2 className="my-2 text-xl text-[#2196f3] font-bold justify-center">
               Project Start Date
-            </FormLabel>
+            </h2>
             <CustomDateTimePicker
               value={dayjs(activeProject?.project?.startDate)}
               onChange={(date) => onChangeHandler("startDate", date)}
@@ -120,9 +120,9 @@ const Page = (props: routeParams) => {
             ></CustomDateTimePicker>
           </div>
           <div className="hover:bg-slate-200 p-5 rounded-xl">
-            <FormLabel className="my-2 text-xl text-[#2196f3] font-bold justify-center">
+            <h2 className="my-2 text-xl text-[#2196f3] font-bold justify-center">
               Project End Date
-            </FormLabel>
+            </h2>
             <CustomDateTimePicker
               value={dayjs(activeProject?.project?.dueDate)}
               orientation="landscape"
@@ -136,7 +136,7 @@ const Page = (props: routeParams) => {
         </div>
 
         <div>
-          <FormLabel className="text-2xl my-2">Description</FormLabel>
+          <h2 className="text-2xl my-2">Description</h2>
           <TextField
             placeholder="What is this project about?...."
             fullWidth
@@ -147,7 +147,7 @@ const Page = (props: routeParams) => {
           ></TextField>
         </div>
         <div>
-          <FormLabel className="text-2xl my-2">Collaborators</FormLabel>
+          <h2 className="text-2xl my-2">Collaborators</h2>
         </div>
       </div>
     </>
