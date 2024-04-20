@@ -1,10 +1,8 @@
 "use client";
 import { useActiveProject } from "@/context/ActiveProjectContextProvider";
 import { Tooltip } from "@mui/joy";
-import { validateHeaderValue } from "http";
-import { Trash, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import * as React from "react";
 
 interface ISidenavProjectListButtonsProps
@@ -30,7 +28,7 @@ const SidenavProjectListButtons: React.FunctionComponent<
       );
       if (res.ok) {
         if (activeProject.project.projectid === projectData.projectid) {
-          router.replace(`${baseUrl}/dashboard`);
+          router.replace(`${baseUrl}/dashboard/projects`);
           activeProject.setProject({});
         }
         props.setProjectList((prev) =>

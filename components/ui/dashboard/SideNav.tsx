@@ -19,6 +19,7 @@ import ProjectForm from "@/app/dashboard/form/projectform";
 import { Project } from "@/types/projects";
 import { useProjectList } from "@/context/ProjectListContext";
 import SidenavProjectListButtons from "./SideNavProjectListButtons";
+import { useRouter } from "next/navigation";
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -73,10 +74,11 @@ const Drawer = styled(MuiDrawer, {
 interface SideNavProps {}
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
-  const projectList = useProjectList()
+  const projectList = useProjectList();
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
+  const router = useRouter();
   const handleForm = () => {
     if (formOpen) {
       setFormOpen(false);
@@ -181,6 +183,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
             className="px-4 py-3 opacity-9  cursor-pointer hover:bg-gray-600/50 flex gap-5"
             onClick={() => {
               setOpen(true);
+              open ? router.push(`${baseUrl}/dashboard/projects`):null;
             }}
           >
             <FolderIcon></FolderIcon>
@@ -192,7 +195,13 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
               }
             >
               <span>Projects</span>
-              <button onClick={handleForm}>
+              <button
+                className="hover:outline-2 hover:outline-offset-1 hover:outline-white "
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleForm();
+                }}
+              >
                 <AddBoxIcon />
               </button>
             </div>
@@ -210,9 +219,9 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                     setProjectList={projectList.setProjects}
                     className="pl-16 py-2 pr-2 cursor-pointer hover:bg-gray-600/50 "
                     projectData={project}
-                    userid = {userid!}
+                    userid={userid!}
                   >
-                    {`${index+1}. ${project.projectName}`}
+                    {`${index + 1}. ${project.projectName}`}
                   </SidenavProjectListButtons>
                 );
               })
