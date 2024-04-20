@@ -57,8 +57,18 @@ interface IGanttChartProps {
 }
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
-  const userid = session.data?.user?.id;
+  let sessionUserid = session.data?.user?.id;
+  const [userid, setuserid] = useState<string|undefined>(undefined);             
+
   
+  useEffect(() => {
+    if (!userid) {
+      setTimeout(() => {
+        setuserid(session?.data?.user.id)
+      }, 200);
+    }
+  }, [userid])
+
   const projectId = props.projectid ?? "1338"
 
   
@@ -119,6 +129,10 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     "ExpandAll",
     "CollapseAll",
   ];
+
+  
+  
+
   return (
     <SyncfusionWrapper>
       {userid && (
