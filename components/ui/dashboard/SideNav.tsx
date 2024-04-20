@@ -20,7 +20,11 @@ import { Project } from "@/types/projects";
 import { useProjectList } from "@/context/ProjectListContext";
 import { useRouter } from "next/navigation";
 import SidenavProjectListButtons from "./SideNavProjectListButtons";
+<<<<<<< HEAD
 
+=======
+import { useRouter } from "next/navigation";
+>>>>>>> 67d189b8236dc8ab7aca8a62ca5c5e1d52759bd1
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -184,9 +188,11 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
             className="px-4 py-3 opacity-9  cursor-pointer hover:bg-gray-600/50 flex gap-5"
             onClick={() => {
               setOpen(true);
+              open ? router.push(`${baseUrl}/dashboard/projects`):null;
             }}
           >
             <FolderIcon></FolderIcon>
+<<<<<<< HEAD
             
               <div
                 className={
@@ -207,6 +213,26 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                 </button>
               </div>
             
+=======
+            <div
+              className={
+                open
+                  ? "flex justify-between content-center w-full"
+                  : "opacity-0"
+              }
+            >
+              <span>Projects</span>
+              <button
+                className="hover:outline-2 hover:outline-offset-1 hover:outline-white "
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleForm();
+                }}
+              >
+                <AddBoxIcon />
+              </button>
+            </div>
+>>>>>>> 67d189b8236dc8ab7aca8a62ca5c5e1d52759bd1
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
             {isLoading ? (

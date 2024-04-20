@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 interface IFormInput {
   projectName: string;
-  dueDate: string;
+  // dueDate: string;
 }
 
 const getTodayDate = ()=>{
@@ -114,7 +114,7 @@ export default function ProjectForm({
                 </p>
               ))}
           </div>
-          <div className="">
+          {/* <div className="">
             <label htmlFor="date " className="block my-2 text-base font-medium">
               Project Due Date
             </label>
@@ -124,7 +124,7 @@ export default function ProjectForm({
               className="block my-2 border-[1px] border-gray-300 rounded-sm p-1 focus:border-blue-700 outline-transparent outline"
               {...register("dueDate")}
             />
-          </div>
+          </div> */}
           <input
             type="submit"
             className="bg-blue-800 cursor-pointer p-2 rounded-md text-white hover:bg-blue-700/85"
