@@ -34,7 +34,7 @@ export default function Page({}: Props) {
                   )
                 }
               >
-                <h2 className="font-semibold text-lg text-gray-700 capitalize">
+                <h2 className="font-semibold text-lg text-gray-700 capitalize overflow-hidden text-ellipsis">
                   {project.projectName}
                 </h2>
                 <span
