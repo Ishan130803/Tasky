@@ -57,11 +57,9 @@ interface IGanttChartProps {
 }
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
-  const userid = session.data?.user?.id;
-  
-  const projectId = props.projectid ?? "1338"
 
-  
+  const projectId = props.projectid ?? "1338";
+
   const taskFields: TaskFieldsModel = {
     id: "task_id",
     name: "task_name",
@@ -80,11 +78,11 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
   const datasource = useMemo<DataManager>(
     () =>
       new DataManager({
-        url: `${baseUrl}/api/users/GetData/${userid}/${projectId}`,
+        url: `${baseUrl}/api/users/GetData/${props.userid}/${projectId}`,
         adaptor: new WebApiAdaptor(),
         crossDomain: true,
       }),
-    [userid]
+    [props.userid]
   );
   const editOptions: EditSettingsModel = {
     allowAdding: true,
@@ -119,9 +117,10 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     "ExpandAll",
     "CollapseAll",
   ];
+
   return (
     <SyncfusionWrapper>
-      {userid && (
+      {props.userid && (
         <div className="rounded-xl w-full ">
           <GanttComponent
             height="800px"

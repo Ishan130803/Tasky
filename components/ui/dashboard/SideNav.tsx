@@ -74,6 +74,7 @@ interface SideNavProps {}
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
   const projectList = useProjectList()
+  const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const handleForm = () => {
@@ -109,7 +110,34 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
 
   let session = useSession();
   const userid = session.data?.user?.id;
-  
+  const baseUrl = global.window?.location?.origin;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!userid) {
+          // If userid is undefined, retry fetching after a delay
+          setTimeout(fetchData, 1000); // Retry after 1 second
+          return;
+        }
+
+        const response = await fetch(`${baseUrl}/api/users/GetData/${userid}`, {
+          method: "GET",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+
+        const result = await response.json();
+        projectList.setProjects(result);
+        setIsloading(false);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, [userid]);
 
   return (
     <>
@@ -170,7 +198,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
             </div>
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
-            {projectList.loading ? (
+            {isLoading ? (
               <li className="px-16 py-2 rotate-180">
                 <LoaderIcon className="animate-spin"></LoaderIcon>
               </li>

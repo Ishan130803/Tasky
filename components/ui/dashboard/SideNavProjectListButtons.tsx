@@ -29,8 +29,9 @@ const SidenavProjectListButtons: React.FunctionComponent<
         }
       );
       if (res.ok) {
-        if (activeProject.project.projectid == projectData.projectid) {
+        if (activeProject.project.projectid === projectData.projectid) {
           router.replace(`${baseUrl}/dashboard`);
+          activeProject.setProject({});
         }
         props.setProjectList((prev) =>
           prev.filter((val) => val.projectid != projectData.projectid)
@@ -44,26 +45,22 @@ const SidenavProjectListButtons: React.FunctionComponent<
     activeProject.project.projectid == projectData.projectid;
   return (
     <Tooltip title={projectData.projectName ?? ""} variant="solid">
-      <Link href={`/dashboard/projects/${projectData.projectid}`}>
-        <li className="flex justify-between content-center ml-12 mr-2 my-1 cursor-pointer">
-          <span
-            className={`flex justify-between hover:bg-gray-600/50 w-full p-2 rounded-xl ${
-              isActiveProject
-                ? "bg-white text-slate-700 hover:bg-slate-200"
-                : ""
-            }`}
-          >
+      <li className="flex justify-between content-center ml-12 mr-2 my-1 cursor-pointer" onClick={()=>router.push(`/dashboard/projects/${projectData.projectid}`)}>
+        <span
+          className={`flex justify-between hover:bg-gray-600/50 w-full p-2 rounded-xl ${
+            isActiveProject ? "bg-white text-slate-700 hover:bg-slate-200" : ""
+          }`}
+        >
             <span className="line-clamp-1 text-ellipsis">{props.children}</span>
-            <Trash2
-              onClick={(e) => {
-                e.stopPropagation();
-                deleteProjectHandler();
-              }}
-              className="flex-shrink-0 hover:bg-slate-300 rounded-lg p-1 text-xl"
-            ></Trash2>
-          </span>
-        </li>
-      </Link>
+          <Trash2
+            onClick={(e) => {
+              e.stopPropagation();
+              deleteProjectHandler();
+            }}
+            className="flex-shrink-0 hover:bg-slate-300 rounded-lg p-1 text-xl"
+          ></Trash2>
+        </span>
+      </li>
     </Tooltip>
   );
 };
