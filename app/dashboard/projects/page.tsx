@@ -20,6 +20,7 @@ export default function Page({}: Props) {
       <Header title={"Projects"} />
       <div className="w-[90%] mx-auto p-4 mt-6">
         <div className="grid lg:grid-cols-4 md:max-lg:grid-cols-3 grid-cols-2 gap-4 auto-rows-min">
+					
           {projectList.map((project) => {
             const duedate : Dayjs|undefined = project.dueDate ? dayjs(project.dueDate) : undefined;
             const startDate : Dayjs|undefined= project.startDate ? dayjs(project.startDate) : undefined;
@@ -27,23 +28,23 @@ export default function Page({}: Props) {
             return (
               <div
                 key={project.projectid}
-                className="p-4 border relative cursor-pointer hover:shadow-md  border-gray-200 rounded-xl "
+                className="p-4 border relative cursor-pointer  hover:shadow-md  border-gray-200 rounded-xl "
                 onClick={() =>
                   router.replace(
                     `${baseUrl}/dashboard/projects/${project.projectid}`
                   )
                 }
               >
-                <h2 className="font-semibold text-lg text-gray-700 capitalize overflow-hidden text-ellipsis">
+                <h2 className="font-semibold my-1 text-lg text-gray-700 capitalize overflow-hidden text-ellipsis">
                   {project.projectName}
                 </h2>
                 <span
-                  className={`block text-base text-blue-500`}
+                  className={`block text-sm text-blue-500`}
                 >
                   Start Date & time : {isDayjs(startDate) ? startDate.format('DD-MM-YYYY HH:mm') : "NA"}
                 </span>
                 <span
-                  className={`block text-base ${
+                  className={`block text-sm ${
                     (duedate && (duedate.isBefore(today))) ? "text-red-500" : "text-blue-500"
                   }`}
                 >

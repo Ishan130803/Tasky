@@ -20,13 +20,10 @@ export default function Toolbar({ projectId }: Props) {
           <li className="p-1 cursor-pointer hover:bg-gray-200 flex rounded-t-md gap-1">
             <GanttChartIcon className="text-gray-700 w-[14px]"></GanttChartIcon>
             <Link href={`/dashboard/projects/${projectId}/timeline`}>
-              Gantt
+              Task Schedule
             </Link>
           </li>
-          <li className="p-1 cursor-pointer hover:bg-gray-200 flex rounded-t-md gap-1">
-            <List className="text-gray-700 w-[14px]" />
-            list
-          </li>
+          
         </ul>
         <hr className="border-gray-200" />
       </div>

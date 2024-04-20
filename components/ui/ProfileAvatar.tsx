@@ -34,7 +34,7 @@ export const ProfileAvatar: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
             onClick={() => setopen(true != open)}
             className="hover:cursor-pointer  border-1 size-fit"
           >
-            <Avatar src={imageURL}></Avatar>
+            <Avatar src={imageURL} className="w-9 h-9"></Avatar>
           </MenuButton>
           <Menu>
             <div className="p-4 flex flex-col gap-2">
