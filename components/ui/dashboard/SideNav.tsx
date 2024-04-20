@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import { LoaderIcon } from "lucide-react";
 import ProjectForm from "@/app/dashboard/form/projectform";
 import { Project } from "@/types/projects";
-import { useProjectContext } from "@/context/context";
+import { useProjectList } from "@/context/ProjectListContext";
 import SidenavProjectListButtons from "./SideNavProjectListButtons";
 const drawerWidth = 240;
 
@@ -73,8 +73,7 @@ const Drawer = styled(MuiDrawer, {
 interface SideNavProps {}
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
-  const [projects, setProjects] = useState<any[]>([]);
-  const [isLoading, setIsloading] = useState<boolean>(true);
+  const projectList = useProjectList()
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
   const handleForm = () => {
@@ -86,7 +85,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
   };
 
   const handleProjects = (data: Project) => {
-    setProjects([...projects, data]);
+    projectList.setProjects([...projectList.projects, data]);
   };
 
   const navlinks = [
@@ -110,34 +109,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
 
   let session = useSession();
   const userid = session.data?.user?.id;
-  const baseUrl = global.window?.location?.origin;
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!userid) {
-          // If userid is undefined, retry fetching after a delay
-          setTimeout(fetchData, 1000); // Retry after 1 second
-          return;
-        }
-
-        const response = await fetch(`${baseUrl}/api/users/GetData/${userid}`, {
-          method: "GET",
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        const result = await response.json();
-        setProjects(result);
-        setIsloading(false);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchData();
-  }, [userid]);
+  
 
   return (
     <>
@@ -198,16 +170,16 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
             </div>
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
-            {isLoading ? (
+            {projectList.loading ? (
               <li className="px-16 py-2 rotate-180">
                 <LoaderIcon className="animate-spin"></LoaderIcon>
               </li>
             ) : (
-              projects.map((project, index) => {
+              projectList.projects.map((project, index) => {
                 return (
                   <SidenavProjectListButtons
                     key={index}
-                    setProjectList={setProjects}
+                    setProjectList={projectList.setProjects}
                     className="pl-16 py-2 pr-2 cursor-pointer hover:bg-gray-600/50 "
                     projectData={project}
                     userid = {userid!}

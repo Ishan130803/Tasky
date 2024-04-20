@@ -1,20 +1,21 @@
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { ReactNode,  useState } from "react";
 import SideNav from "@/components/ui/dashboard/SideNav";
 
 import SessionProviderWrapper from "@/components/ui/wrappers/SessionProviderWrapper";
-import Toolbar from "@/components/ui/dashboard/Toolbar";
-import { ProjectContextProvider } from "@/context/context";
 import { ActiveProjectContext } from "@/context/ActiveProjectContextProvider";
+import ProjectListContextProviderWrapper from "@/context/ProjectListContext";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const [activeProject, setactiveProject] = useState<any>({});  
+  const [activeProject, setactiveProject] = useState<any>({});
 
   return (
     <>
-      <ProjectContextProvider>
-        <SessionProviderWrapper>
-          <ActiveProjectContext.Provider value={{project : activeProject, setProject : setactiveProject}}>
+      <SessionProviderWrapper>
+        <ProjectListContextProviderWrapper>
+          <ActiveProjectContext.Provider
+            value={{ project: activeProject, setProject: setactiveProject }}
+          >
             <div className="relative w-full h-full">
               <div className={"flex relative w-full h-full "}>
                 <SideNav></SideNav>
@@ -26,8 +27,8 @@ export default function Layout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </ActiveProjectContext.Provider>
-        </SessionProviderWrapper>
-      </ProjectContextProvider>
+        </ProjectListContextProviderWrapper>
+      </SessionProviderWrapper>
     </>
   );
 }

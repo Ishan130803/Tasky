@@ -42,7 +42,6 @@ const Layout: React.FunctionComponent<ILayoutProps> = ({
 
     return () => {
       activeProject.setProject({});
-      
     };
   }, [userid]);
   return (
