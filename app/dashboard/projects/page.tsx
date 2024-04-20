@@ -18,8 +18,8 @@ export default function Page({}: Props) {
   return (
     <>
       <Header title={"Projects"} />
-      <div className="w-[90%] mx-auto p-4 mt-6 min-w-max">
-        <div className="grid md:grid-cols-4 grid-cols-2 gap-4">
+      <div className="w-[90%] mx-auto p-4 mt-6">
+        <div className="grid lg:grid-cols-4 md:max-lg:grid-cols-3 grid-cols-2 gap-4 auto-rows-min">
           {projectList.map((project) => {
             const duedate : Dayjs|undefined = project.dueDate ? dayjs(project.dueDate) : undefined;
             const startDate : Dayjs|undefined= project.startDate ? dayjs(project.startDate) : undefined;
@@ -27,14 +27,14 @@ export default function Page({}: Props) {
             return (
               <div
                 key={project.projectid}
-                className="p-4 border cursor-pointer hover:shadow-md flex flex-col gap-4 border-gray-200 rounded-xl min-w-max"
+                className="p-4 border relative cursor-pointer hover:shadow-md  border-gray-200 rounded-xl "
                 onClick={() =>
                   router.replace(
                     `${baseUrl}/dashboard/projects/${project.projectid}`
                   )
                 }
               >
-                <h2 className="font-semibold text-lg text-gray-700 capitalize">
+                <h2 className="font-semibold text-lg text-gray-700 capitalize overflow-hidden text-ellipsis">
                   {project.projectName}
                 </h2>
                 <span

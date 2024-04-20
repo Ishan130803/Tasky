@@ -3,12 +3,11 @@ import React, { ReactNode, useEffect, useState } from "react";
 import SideNav from "@/components/ui/dashboard/SideNav";
 
 import SessionProviderWrapper from "@/components/ui/wrappers/SessionProviderWrapper";
-import Toolbar from "@/components/ui/dashboard/Toolbar";
 import { ActiveProjectContext } from "@/context/ActiveProjectContextProvider";
 import { ProjectListContext } from "@/context/ProjectListContext";
-
 export default function Layout({ children }: { children: ReactNode }) {
   const [projects, setProjects] = useState<any[]>([]);
+
   const [activeProject, setactiveProject] = useState<any>({});
 
   return (
