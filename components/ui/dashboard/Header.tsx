@@ -28,7 +28,7 @@ export default function Header({title}:Props) {
   };
   return (
     <>
-      <div className="p-2 w-full flex justify-between content-center">
+      <div className="p-3 w-full flex justify-between content-center">
         <div className="h-full p-2 ">
           <div className="flex gap-2 content-end">
             <LucideFolders className="inline" />
@@ -37,8 +37,8 @@ export default function Header({title}:Props) {
         </div>
         <div className="flex gap-2">
           <button onClick={()=>{setFormOpen(true)}} className="p-1 flex gap-2 content-center bg-blue-400/85  rounded-md text-white font-semibold hover:shadow-md hover:bg-blue-400">
-            <PlusCircle className="inline" />
-            <span className="block">New</span>
+            <PlusCircle className="inline w-5 h-5 mt-1" />
+            <span className="block mt-1">New</span>
             
           </button>
           <ProfileAvatar className="z-10 hover:cursor-pointer rounded-full" />
