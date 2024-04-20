@@ -1,7 +1,7 @@
 "use client";
 import CustomDateTimePicker from "@/components/ui/dashboard/project/CustorDateTimePicker";
 import { useActiveProject } from "@/context/ActiveProjectContextProvider";
-import { ProjectContext } from "@/context/context";
+import { useProjectList } from "@/context/ProjectListContext";
 import { CircularProgress, FormLabel, Snackbar } from "@mui/joy";
 import { TextField } from "@mui/material";
 import SliderValueLabel from "@mui/material/Slider/SliderValueLabel";
@@ -17,13 +17,22 @@ interface routeParams {
 
 const Page = (props: routeParams) => {
   const activeProject = useActiveProject();
+  const projectList = useProjectList();
   const [showSnackBar, setshowSnackBar] = useState<boolean>(false);
   const [snackbarVariant, setsnackbarVariant] = useState<
     "neutral" | "success" | "warning"
   >("neutral");
-  const [loading, setloading] = useState<boolean>(false);
   const onChangeHandler = (field: string, value: any) => {
     const newObj = { ...activeProject?.project, [field]: value };
+    projectList.setProjects((prev) =>
+      prev.map((value) => {
+        if (value.projectid == newObj.projectid) {
+          return newObj;
+        } else {
+          return prev;
+        }
+      })
+    );
     activeProject.setProject({ ...newObj });
   };
   const baseUrl = global.window?.location?.origin;
@@ -52,7 +61,7 @@ const Page = (props: routeParams) => {
         setshowSnackBar(true);
       }
     };
-    const timeOut = setTimeout(updateData,2000);
+    const timeOut = setTimeout(updateData, 2000);
 
     return () => {
       clearTimeout(timeOut);
@@ -64,7 +73,6 @@ const Page = (props: routeParams) => {
       <div className="container flex flex-col gap-10">
         <Snackbar
           autoHideDuration={2000}
-
           open={showSnackBar}
           variant={"solid"}
           color={snackbarVariant}

@@ -17,7 +17,7 @@ import { useSession } from "next-auth/react";
 import { LoaderIcon } from "lucide-react";
 import ProjectForm from "@/app/dashboard/form/projectform";
 import { Project } from "@/types/projects";
-import { useProjectContext } from "@/context/context";
+import { useProjectList } from "@/context/ProjectListContext";
 import SidenavProjectListButtons from "./SideNavProjectListButtons";
 const drawerWidth = 240;
 
@@ -73,7 +73,7 @@ const Drawer = styled(MuiDrawer, {
 interface SideNavProps {}
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
-  const [projects, setProjects] = useState<any[]>([]);
+  const projectList = useProjectList()
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
@@ -86,7 +86,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
   };
 
   const handleProjects = (data: Project) => {
-    setProjects([...projects, data]);
+    projectList.setProjects([...projectList.projects, data]);
   };
 
   const navlinks = [
@@ -129,7 +129,7 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
         }
 
         const result = await response.json();
-        setProjects(result);
+        projectList.setProjects(result);
         setIsloading(false);
       } catch (err) {
         console.error(err);
@@ -203,11 +203,11 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                 <LoaderIcon></LoaderIcon>
               </li>
             ) : (
-              projects.map((project, index) => {
+              projectList.projects.map((project, index) => {
                 return (
                   <SidenavProjectListButtons
                     key={index}
-                    setProjectList={setProjects}
+                    setProjectList={projectList.setProjects}
                     className="pl-16 py-2 pr-2 cursor-pointer hover:bg-gray-600/50 "
                     projectData={project}
                     userid = {userid!}
