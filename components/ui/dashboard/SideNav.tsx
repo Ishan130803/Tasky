@@ -18,7 +18,9 @@ import { LoaderIcon } from "lucide-react";
 import ProjectForm from "@/app/dashboard/form/projectform";
 import { Project } from "@/types/projects";
 import { useProjectList } from "@/context/ProjectListContext";
+import { useRouter } from "next/navigation";
 import SidenavProjectListButtons from "./SideNavProjectListButtons";
+
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -73,10 +75,11 @@ const Drawer = styled(MuiDrawer, {
 interface SideNavProps {}
 
 const SideNav: React.FC<SideNavProps> = ({}) => {
-  const projectList = useProjectList()
+  const projectList = useProjectList();
   const [isLoading, setIsloading] = useState<boolean>(true);
   const [open, setOpen] = React.useState(false);
   const [formOpen, setFormOpen] = useState<boolean>(false);
+  const router = useRouter();
   const handleForm = () => {
     if (formOpen) {
       setFormOpen(false);
@@ -184,18 +187,26 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
             }}
           >
             <FolderIcon></FolderIcon>
-            <div
-              className={
-                open
-                  ? "flex justify-between content-center w-full"
-                  : "opacity-0"
-              }
-            >
-              <span>Projects</span>
-              <button onClick={handleForm}>
-                <AddBoxIcon />
-              </button>
-            </div>
+            
+              <div
+                className={
+                  open
+                    ? "flex justify-between content-center w-full"
+                    : "opacity-0"
+                }
+                onClick={()=> router.push('/dashboard/projects')}
+              >
+                <span>Projects</span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleForm();
+                  }}
+                >
+                  <AddBoxIcon />
+                </button>
+              </div>
+            
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
             {isLoading ? (
@@ -210,9 +221,9 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                     setProjectList={projectList.setProjects}
                     className="pl-16 py-2 pr-2 cursor-pointer hover:bg-gray-600/50 "
                     projectData={project}
-                    userid = {userid!}
+                    userid={userid!}
                   >
-                    {`${index+1}. ${project.projectName}`}
+                    {`${index + 1}. ${project.projectName}`}
                   </SidenavProjectListButtons>
                 );
               })
