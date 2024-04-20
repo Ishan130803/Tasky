@@ -20,11 +20,7 @@ import { Project } from "@/types/projects";
 import { useProjectList } from "@/context/ProjectListContext";
 import { useRouter } from "next/navigation";
 import SidenavProjectListButtons from "./SideNavProjectListButtons";
-<<<<<<< HEAD
-
-=======
 import { useRouter } from "next/navigation";
->>>>>>> 67d189b8236dc8ab7aca8a62ca5c5e1d52759bd1
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -192,28 +188,6 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
             }}
           >
             <FolderIcon></FolderIcon>
-<<<<<<< HEAD
-            
-              <div
-                className={
-                  open
-                    ? "flex justify-between content-center w-full"
-                    : "opacity-0"
-                }
-                onClick={()=> router.push('/dashboard/projects')}
-              >
-                <span>Projects</span>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleForm();
-                  }}
-                >
-                  <AddBoxIcon />
-                </button>
-              </div>
-            
-=======
             <div
               className={
                 open
@@ -232,7 +206,6 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
                 <AddBoxIcon />
               </button>
             </div>
->>>>>>> 67d189b8236dc8ab7aca8a62ca5c5e1d52759bd1
           </li>
           <ul className={open ? "opacity-100" : "opacity-0"}>
             {isLoading ? (
