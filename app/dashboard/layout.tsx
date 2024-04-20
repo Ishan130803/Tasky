@@ -8,7 +8,6 @@ import { ProjectContextProvider } from "@/context/context";
 import { ActiveProjectContext } from "@/context/ActiveProjectContextProvider";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  const [projects, setProjects] = useState<any[]>();
   const [activeProject, setactiveProject] = useState<any>({});  
 
   return (
