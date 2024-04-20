@@ -93,13 +93,11 @@ const SideNav: React.FC<SideNavProps> = ({}) => {
 
   const navlinks = [
     { name: "My Actions", route: "/dashboard/" },
-    { name: "Project Navigator", route: "dashboard/projectNavigator" },
-    { name: "Pinned", route: "/dashboard/pinned" },
+    
   ];
   const navIcons = [
     <HomeIcon key={navlinks[0].name} />,
-    <ExploreIcon key={navlinks[1].name} />,
-    <PushPinIcon key={navlinks[2].name} />,
+    
   ];
   const theme = useTheme();
   const handleClick = () => {
