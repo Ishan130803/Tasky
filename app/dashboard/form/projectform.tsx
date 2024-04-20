@@ -3,7 +3,7 @@ import { Project } from "@/types/projects";
 import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-
+import { useRouter } from "next/navigation";
 interface IFormInput {
   projectName: string;
   dueDate: Date;
@@ -25,6 +25,7 @@ export default function ProjectForm({
       projectName: "",
     },
   });
+  const router = useRouter();
   let session = useSession();
   const userid = session.data?.user?.id;
   const baseUrl = global.window?.location?.origin;
@@ -45,7 +46,8 @@ export default function ProjectForm({
         })
         .then((data) => {
           const newProj = data.json.data[0];
-          
+          let projectid = newProj.projectid;
+          router.replace(`${baseUrl}/dashboard/projects/${projectid}`);
           createProjects(newProj);
           openForm();
         });
