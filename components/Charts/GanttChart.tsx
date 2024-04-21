@@ -32,7 +32,7 @@ import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSession } from "next-auth/react";
 import { SyncfusionWrapper } from "../ui/wrappers/SyncfusionWrapper";
 import { useActiveProject } from "@/context/ActiveProjectContextProvider";
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 const GanttData: object[] = [
   {
@@ -148,8 +148,8 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
       rightarrow += 35;
     }
   };
-  const eventMarkerDay1 = (activeProject.project.startDate as Dayjs).toDate() ?? new Date();
-  const eventMarkerDay2 = (activeProject.project.dueDate as Dayjs).toDate() ?? new Date();
+  const eventMarkerDay1 = dayjs(activeProject?.project.startDate ?? new Date()).toDate();
+  const eventMarkerDay2 = dayjs(activeProject?.project.dueDate ?? new Date()).toDate() 
 
   return (
     <SyncfusionWrapper>
