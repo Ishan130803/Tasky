@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
     redirect() {
-      return "/dashboard";
+      return "/dashboard/projects";
     },
   },
 };
