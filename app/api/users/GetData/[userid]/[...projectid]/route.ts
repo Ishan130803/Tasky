@@ -36,17 +36,17 @@ export async function GET(req: NextRequest, context: routeParams) {
     const taskCollection =
       db.collection("userTasks") ?? (await db.createCollection("userTasks"));
 
-    const user = await userCollection.findOne({ userId: new ObjectId(userid) });
-    if (!user) {
-      return new Response("No Such User", { status: 404 });
-    }
+    // const user = await userCollection.findOne({ userId: new ObjectId(userid) });
+    // if (!user) {
+    //   return new Response("No Such User", { status: 404 });
+    // }
     const project = await projectCollection.findOne({
       userId: userid,
       projectid: projectid,
     });
 
     if (!project) {
-      return new Response("No Such Project", { status: 404 });
+      return new Response("No Such Project or user", { status: 404 });
     }
 
     const tasks = await taskCollection
@@ -76,17 +76,17 @@ export async function PUT(req: NextRequest, context: routeParams) {
     const taskCollection =
       db.collection("userTasks") ?? (await db.createCollection("userTasks"));
 
-    const user = await userCollection.findOne({ userId: new ObjectId(uid) });
-    if (!user) {
-      return new Response("No Such User", { status: 404 });
-    }
+    // const user = await userCollection.findOne({ userId: new ObjectId(uid) });
+    // if (!user) {
+    //   return new Response("No Such User", { status: 404 });
+    // }
     const project = await projectCollection.findOne({
       userId: uid,
       projectid: pid,
     });
 
     if (!project) {
-      return new Response("No Such Project", { status: 404 });
+      return new Response("No Such Project or user", { status: 404 });
     }
     const updatedData: Array<Document> = await req.json();
 
@@ -138,17 +138,17 @@ export async function POST(req: NextRequest, context: routeParams) {
     const taskCollection =
       db.collection("userTasks") ?? (await db.createCollection("userTasks"));
 
-    const user = await userCollection.findOne({ userId: new ObjectId(userid) });
-    if (!user) {
-      return new Response("No Such User", { status: 404 });
-    }
+    // const user = await userCollection.findOne({ userId: new ObjectId(userid) });
+    // if (!user) {
+    //   return new Response("No Such User", { status: 404 });
+    // }
     const project = await projectCollection.findOne({
       userId: userid,
       projectid: projectid,
     });
 
     if (!project) {
-      return new Response("No Such Project", { status: 404 });
+      return new Response("No Such Project or user", { status: 404 });
     }
     const data: Array<Document> = await req.json();
 
@@ -189,17 +189,17 @@ export async function DELETE(req: Request, context: routeParams) {
     const taskCollection =
       db.collection("userTasks") ?? (await db.createCollection("userTasks"));
 
-    const user = await userCollection.findOne({ userId: new ObjectId(userid) });
-    if (!user) {
-      return new Response("No Such User", { status: 404 });
-    }
+    // const user = await userCollection.findOne({ userId: new ObjectId(userid) });
+    // if (!user) {
+    //   return new Response("No Such User", { status: 404 });
+    // }
     const project = await projectCollection.findOne({
       userId: userid,
       projectid: projectid,
     });
 
     if (!project) {
-      return new Response("No Such Project", { status: 404 });
+      return new Response("No Such Project or user", { status: 404 });
     }
 
     const res = await taskCollection.deleteOne({

@@ -22,10 +22,17 @@ import {
   EditDialogFieldDirective,
   AddDialogFieldSettingsModel,
   Sort,
+  Resize,
+  EventMarkersDirective,
+  EventMarkerDirective,
+  DayMarkers,
+  
 } from "@syncfusion/ej2-react-gantt";
 import { DataManager, WebApiAdaptor } from "@syncfusion/ej2-data";
 import { useSession } from "next-auth/react";
 import { SyncfusionWrapper } from "../ui/wrappers/SyncfusionWrapper";
+import { useActiveProject } from "@/context/ActiveProjectContextProvider";
+import dayjs, { Dayjs } from "dayjs";
 
 const GanttData: object[] = [
   {
@@ -57,6 +64,7 @@ interface IGanttChartProps {
 }
 export const GanttChart: FC<IGanttChartProps> = (props) => {
   let session = useSession();
+  const activeProject = useActiveProject()
 
   const projectId = props.projectid ?? "1338";
 
@@ -71,6 +79,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     dependency: "Predecessor",
     expandState: "isExpanded",
     notes: "Notes",
+    durationUnit: "durationUnit",
   };
 
   const baseUrl = global.window?.location?.origin;
@@ -89,6 +98,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     allowEditing: true,
     allowDeleting: true,
     allowTaskbarEditing: true,
+    mode: "Dialog",
   };
   const selectionSettings: SelectionSettingsModel = {
     type: "Multiple",
@@ -99,7 +109,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     taskLabel: "${Progress}%",
   };
 
-  const dayWorkingTime = [{ from: 9, to: 18 }];
+  const dayWorkingTime = [{ from: 6, to: 22 }];
 
   let timelineSettings: TimelineSettingsModel = {
     updateTimescaleView: true,
@@ -116,7 +126,30 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
     "Outdent",
     "ExpandAll",
     "CollapseAll",
+    "ZoomIn",
+    "ZoomOut",
+    "ZoomToFit",
   ];
+
+
+  function dataBound() {
+    let labeltop = 100;
+    let rightarrow = 110;
+    const eventMarkerLabels = document.getElementsByClassName("e-span-label");
+    const eventMarkerArrows = document.getElementsByClassName("e-gantt-right-arrow");
+    for (let i = 0; i < eventMarkerLabels.length; i++) {
+      const label = eventMarkerLabels[i] as HTMLElement;
+      const arrow = eventMarkerArrows[i] as HTMLElement;
+      if (label && arrow) {
+        label.style.top = labeltop + "px";
+        arrow.style.top = rightarrow + "px";
+      }
+      labeltop += 35;
+      rightarrow += 35;
+    }
+  };
+  const eventMarkerDay1 = dayjs(activeProject?.project.startDate ?? new Date()).toDate();
+  const eventMarkerDay2 = dayjs(activeProject?.project.dueDate ?? new Date()).toDate() 
 
   return (
     <SyncfusionWrapper>
@@ -128,6 +161,7 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
             style={{
               height: "900px",
             }}
+            dataBound={dataBound}
             dateFormat="d MMM yy hh:mm"
             durationUnit="Hour"
             editSettings={editOptions}
@@ -151,12 +185,27 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
               <ColumnDirective
                 headerText="S.No."
                 field="task_id"
-                width="150"
+                minWidth={150}
               ></ColumnDirective>
               <ColumnDirective
                 headerText="Task Name"
                 field="task_name"
-                width="250"
+                minWidth={150}
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="Start Time"
+                field="start_time"
+                minWidth={100}
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="End Time"
+                field="end_time"
+                minWidth={100}
+              ></ColumnDirective>
+              <ColumnDirective
+                headerText="Progress"
+                field="Progress"
+                minWidth={100}
               ></ColumnDirective>
             </ColumnsDirective>
 
@@ -191,8 +240,12 @@ export const GanttChart: FC<IGanttChartProps> = (props) => {
               <EditDialogFieldDirective type="Dependency"></EditDialogFieldDirective>
               <EditDialogFieldDirective type="Notes"></EditDialogFieldDirective>
             </EditDialogFieldsDirective>
+            <EventMarkersDirective>
+              <EventMarkerDirective day={eventMarkerDay1} cssClass='e-custom-event-marker'  label='Project Start Date' ></EventMarkerDirective>
+              <EventMarkerDirective day={eventMarkerDay2} cssClass=''  label='Project End Date' ></EventMarkerDirective>
+        </EventMarkersDirective>
             <Inject
-              services={[RowDD, Edit, Selection, Toolbar, ContextMenu, Sort]}
+              services={[DayMarkers ,RowDD, Edit, Selection, Toolbar, ContextMenu, Resize]}
             />
           </GanttComponent>
         </div>
